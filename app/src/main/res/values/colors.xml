@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#43A047</color>
+    <color name="colorPrimaryDark">#1B1A1A</color>
+    <color name="colorAccent">#43A047</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#9A9A9A</color>
+    <color name="splashBackground">#6060AA</color>
+    <color name="appBackground">#FFFFFF</color>
+    <color name="textColor">#404040</color>
+    <color name="loadingColor">#6060AA</color>
+    <color name="gaugesBackground">#AACCCCCC</color>
+    <color name="progressBackground">#AACCCCCC</color>
+    <color name="progressColor">#AAAAAA</color>
+    <color name="dlGauge">#6060AA</color>
+    <color name="dlText">#616161</color>
+    <color name="ulGauge">#616161</color>
+    <color name="ulText">#616161</color>
+    <color name="pingText">#AA6060</color>
+    <color name="jitterText">#AA6060</color>
+    <color name="serverText">#808080</color>
+    <color name="startButton_background">#6060AA</color>
+    <color name="startButton_text">#FFFFFF</color>
+    <color name="failButton_background">#6060AA</color>
+    <color name="failButton_text">#FFFFFF</color>
+    <color name="shareButton_background">#BF360C</color>
+    <color name="shareButton_text">#FFFFFF</color>
+    <color name="restartButton_background">#6060AA</color>
+    <color name="restartButton_text">#FFFFFF</color>
+    <color name="privacyLinks">#808080</color>
+    <color name="buttonBackground">#3af3ff</color>
+    <color name="textColor2">#242e3a</color>
+    <color name="colorPrimary2">#1d252e</color>
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/month"
+            android:icon="@drawable/month"
+            android:title="Monthly Data"
+            />
+
+        <item
+            android:id="@+id/speedtest"
+            android:icon="@drawable/speeds"
+            android:title="Speed Test" />
+
+        <item
+            android:id="@+id/speedtestresult"
+            android:icon="@drawable/results"
+            android:title="Speed Test Result" />
+
+        <item
+            android:id="@+id/graph"
+            android:icon="@drawable/graph"
+            android:title="Graph" />
+
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/settings"
+            android:title="Settings" />
+
+    </group>
+    <item android:title="Extras">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_share"
+                    android:icon="@drawable/baseline_share_24"
+                    android:title="Share" />
+                <item
+                    android:id="@+id/rate"
+                    android:icon="@drawable/rate"
+                    android:title="Rate App" />
+
+                <item
+                    android:id="@+id/more"
+                    android:icon="@drawable/more"
+                    android:title="More Apps" />
+            </group>
+        </menu>
+    </item>
+
+
+</menu>

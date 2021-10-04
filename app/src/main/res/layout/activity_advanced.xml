@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#292B2B"
+    android:orientation="vertical"
+    tools:context=".AdvancedActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#333333"
+            >
+            <LinearLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"><ImageView
+                android:id="@+id/imageBackHome"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="13dp"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/ic_keyboard_backspace_black_24dp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Back"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="13dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:textSize="16dp"
+                    tools:layout_editor_absoluteX="123dp"
+                    tools:layout_editor_absoluteY="518dp" /></LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="60dp"
+                tools:ignore="MissingConstraints">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DNS Settings"
+                    android:textSize="18dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/colorAccent"/>
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal">
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Regular DNS"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="start"
+                        android:textAlignment="textStart"
+                        android:textColor="#ffffff"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        android:layoutDirection="rtl"/>
+
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="DNS over HTTPS"
+                    android:layout_gravity="start"
+                    android:layout_marginBottom="10dp"
+                    android:textAlignment="textStart"
+                    android:textColor="#ffffff"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="25dp"
+                    android:layoutDirection="rtl"/>
+                <RadioButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="DNS over TLS"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#ffffff"
+                    android:textSize="15dp"
+                    android:layout_gravity="start"
+                    android:textAlignment="textStart"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="25dp"
+                    android:layoutDirection="rtl"/>
+                </RadioGroup>
+                <TextView
+                    android:id="@+id/advancedDnsSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Advanced DNS Settings"
+                    android:textColor="#ffff"
+                    android:layout_margin="20dp"/>
+            </LinearLayout>
+        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    ><View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:orientation="horizontal"
+                    android:background="@color/textColorSecondary"
+                    />
+                </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="60dp"
+                tools:ignore="MissingConstraints">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    tools:ignore="MissingConstraints">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Web Filtering Settings"
+                        android:textSize="15dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="@color/colorAccent"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Enabling Filtering"
+                            android:textSize="15dp"
+                            android:textColor="#ffffff"/>
+
+                        <Switch
+                            android:id="@+id/switch30"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            />
+
+
+                    </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+
+    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioSecurity"
+                        android:layout_gravity="start"
+                        android:textAlignment="textStart"
+                        android:layoutDirection="rtl"
+                        android:enabled="false"
+                        android:text="Security Filter"
+                        android:textColor="#8B8B8B"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        />
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioFamily"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:layout_gravity="start"
+                        android:textAlignment="textStart"
+                        android:text="Family Filter"
+                        android:textColor="#8B8B8B"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        android:layoutDirection="rtl"/>
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioAds"
+                        android:layout_weight="1"
+                        android:text="Ads Filter"
+                        android:enabled="false"
+                        android:layout_gravity="start"
+                        android:textAlignment="textStart"
+                        android:textColor="#8B8B8B"
+                        android:textSize="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        android:layoutDirection="rtl"/>
+    </RadioGroup>
+</LinearLayout>
+</LinearLayout>
+
+            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        ><View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:orientation="horizontal"
+                        android:background="@color/textColorSecondary"
+                        />
+                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="60dp"
+                    tools:ignore="MissingConstraints">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VPN Settings"
+                    android:textSize="18dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="@color/colorAccent"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5dp"
+                 >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enable VPN"
+                        android:textSize="15dp"
+                        android:textColor="#ffffff"/>
+
+
+                    <Switch
+                        android:id="@+id/switch3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5dp"
+                   >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Auto connect"
+                        android:textSize="15dp"
+                        android:textColor="#ffffff"/>
+
+
+                    <Switch
+                        android:id="@+id/switch1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        />
+                </LinearLayout>
+                    <TextView
+                        android:id="@+id/advancedVpnSettings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Advanced VPN Settings"
+                        android:textColor="#ffff"
+                        android:paddingTop="5dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"/>
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"/>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+</ScrollView>

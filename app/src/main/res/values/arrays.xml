@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="ld_activityScreenTitles">
+        <item>Home</item>
+        <item>Advanced Security Options</item>
+        <item>My Internet Speed</item>
+        <item>Settings</item>
+        <item>Help</item>
+        <item>Exit</item>
+    </string-array>
+
+    <array name="ld_activityScreenIcons">
+        <item>@drawable/ic_home_black_24dp</item>
+        <item>@drawable/ic_security_black_24dp</item>
+        <item>@drawable/ic_av_timer_black_24dp</item>
+        <item>@drawable/ic_settings_black_24dp</item>
+        <item>@drawable/ic_help_black_24dp</item>
+        <item>@drawable/ic_exit_to_app_black_24dp</item>
+    </array>
+    <string-array name="advanced_options">
+        <item>CloudFlare Standard</item>
+        <item>CloudFlare Security</item>
+        <item>CloudFlare Family</item>
+        <item>CleanBrowsing Security</item>
+        <item>CleanBrowsing Adult Filter</item>
+        <item>CleanBrowsing Family Filter</item>
+        <item>AdGuard Ads Filter</item>
+        <item>AdGuard Family Filter</item>
+        <item>Google</item>
+        <item>Quad9 Standard</item>
+        <item>Quad9 Security</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="speedTestRangeValues">
+        <item>0</item>
+        <item>100</item>
+        <item>200</item>
+        <item>300</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>2000</item>
+        <item>3000</item>
+        <item>5000</item>
+    </string-array>
+    <declare-styleable name="GaugeView">
+        <attr name="gauge_backgroundColor" format="color" />
+        <attr name="gauge_fillColor" format="color" />
+        <attr name="gauge_strokeWidth" format="dimension" />
+        <attr name="gauge_startAngle" format="integer" />
+        <attr name="gauge_angles" format="integer" />
+        <attr name="gauge_maxValue" format="integer" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "747335813533",
+    "firebase_url": "https://internetspped.firebaseio.com",
+    "project_id": "internetspped",
+    "storage_bucket": "internetspped.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747335813533:android:7232de82256e4966",
+        "android_client_info": {
+          "package_name": "internetspeed.datausage.spedwatche"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "747335813533-46jfqsd83lsufvis68esr8u06eta2qff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE-csDT0z6g61tz19jXmkH7QWS2xaNczs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "747335813533-46jfqsd83lsufvis68esr8u06eta2qff.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

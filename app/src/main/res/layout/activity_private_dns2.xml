@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#292B2B"
+    tools:context=".PrivateDNSActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"></com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#333333"
+            >
+            <LinearLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"><ImageView
+                android:id="@+id/imageBackHome"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="13dp"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/ic_keyboard_backspace_black_24dp"
+                tools:ignore="VectorDrawableCompat" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Back"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="13dp"
+                    android:textColor="@color/textColorSecondary"
+                    android:textSize="16dp"
+                    tools:layout_editor_absoluteX="123dp"
+                    tools:layout_editor_absoluteY="518dp" /></LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="60dp"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Advanced DNS Settings"
+                android:textSize="18dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/colorAccent"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorSecondary"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="10dp"
+                android:text="Private DNS sends data through an encrypted channel to ensure network security. Some network lag may occur during use." />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioGroup"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
+                <RadioButton
+                    android:id="@+id/radio"
+                    android:checked="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Off"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="start"
+                    android:textAlignment="textStart"
+                    android:textColor="#ffffff"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="25dp"
+                    android:layoutDirection="rtl"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:orientation="horizontal"
+                    android:background="@color/textColorSecondary"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="25dp"
+                    />
+                <RadioButton
+                    android:id="@+id/radio1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Auto"
+                    android:layout_gravity="start"
+                    android:layout_marginBottom="10dp"
+                    android:textAlignment="textStart"
+                    android:textColor="#ffffff"
+                    android:textSize="15dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="25dp"
+                    android:layoutDirection="rtl"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:orientation="horizontal"
+                    android:background="@color/textColorSecondary"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="25dp"
+                    />
+                <RadioButton
+                    android:id="@+id/radio2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Configure Private DNS"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="#ffffff"
+                    android:textSize="15dp"
+                    android:layout_gravity="start"
+                    android:textAlignment="textStart"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="25dp"
+                    android:layoutDirection="rtl"/>
+            </RadioGroup>
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="25dp"
+                android:spinnerMode="dropdown"/>
+
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:enabled="false"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="25dp"
+                android:inputType="textPersonName"
+                android:textColor="@color/textColorSecondary"
+                />
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorSecondary"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="10dp"
+                android:text="Hostname must consist of spercial characters, numbers, or letters. Confirm that DNS address is correct before saving to avoid any connection issues." />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

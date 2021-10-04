@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/internet_speed"
+        android:title="Internet Speed"
+        android:icon="@drawable/ic_av_timer_black_24dp"/>
+    <item
+        android:id="@+id/http_test"
+        android:title="Website test"
+        android:icon="@drawable/ic_language_black_24dp"/>
+    <item
+        android:id="@+id/video_test"
+        android:title="Video Quality"
+        android:icon="@drawable/ic_video_library_black_24dp"/>
+    <item
+        android:id="@+id/report"
+        android:title="Report"
+        android:icon="@drawable/ic_insert_chart_black_24dp"/>
+
+</menu>

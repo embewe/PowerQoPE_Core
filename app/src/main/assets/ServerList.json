@@ -1,0 +1,10 @@
+[
+  {
+    "name":"Malawi, Lilongwe",
+    "server":"//lab.enockmbewe.com:8081",
+    "dlURL":"garbage.php",
+    "ulURL":"empty.php",
+    "pingURL":"empty.php",
+    "getIpURL":"getIP.php"
+  }
+]

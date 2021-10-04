@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.ReportsFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#333333"
+        app:tabTextAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textAlignment="center"
+        app:tabIconTint="@color/textColorSecondary"
+        app:tabIndicatorColor="@color/textColorSecondary"
+        app:tabTextColor="@color/textColorSecondary"/>
+
+</com.google.android.material.appbar.AppBarLayout>
+
+<androidx.viewpager.widget.ViewPager
+
+android:id="@+id/pager"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    </LinearLayout>
+</FrameLayout>

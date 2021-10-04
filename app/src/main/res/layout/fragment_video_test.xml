@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#292B2B"
+    tools:context=".fragment.VideoTestFragment">
+
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/button"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:text="Start"
+            android:padding="15dp"
+            android:drawableTop="@drawable/ic_play_circle_outline_black_24dp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:textColor="@color/colorAccent"
+            android:background="@drawable/shape"/>
+
+    </FrameLayout>
+</FrameLayout>

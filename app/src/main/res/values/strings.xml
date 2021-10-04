@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">PowerQoPE</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_private_dns">PrivateDNSActivity</string>
+    <string name="logo_inapp_link">https://github.com/librespeed/speedtest-android</string>
+    <string name="privacy_policy">file:///android_asset/privacy_en.html</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_exit">Exit</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_pref">Pref</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="banner_home_footer">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_home">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="interstitial_full_screen_1">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="fulscreen">ca-app-pub-3940256099942544/1033173712</string>
+
+    <string name="init_init">Loading</string>
+    <string name="initFail_configError">Configuration error</string>
+    <string name="initFail_retry">Retry</string>
+    <string name="init_selecting">Selecting server</string>
+    <string name="initFail_noServers">No servers available</string>
+    <string name="serverSelect_message">Select a server</string>
+    <string name="start">Start</string>
+    <string name="test_dl">Download</string>
+    <string name="test_ul">Upload</string>
+    <string name="test_speedMeasure">Mbps</string>
+    <string name="test_ping">Ping</string>
+    <string name="test_jitter">Jitter</string>
+    <string name="test_timeMeasure">ms</string>
+    <string name="test_share">Share result</string>
+    <string name="test_restart">New test</string>
+    <string name="testFail_err">An error occurred</string>
+    <string name="testFail_retry">Try again</string>
+    <string name="privacy_open"><u>Privacy</u></string>
+    <string name="privacy_close"><u>Back</u></string>
+</resources>

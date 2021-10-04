@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#292B2B"
+    tools:context=".com.dreamtech.powerqope.fragment.FilterFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="60dp"
+        tools:ignore="MissingConstraints">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filtering Settings"
+                android:textSize="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/colorAccent"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enabling Filtering"
+                    android:textSize="15dp"
+                    android:textColor="#ffffff"/>
+
+                <Switch
+                    android:id="@+id/switch30"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal">
+
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioSecurity"
+                        android:layout_gravity="start"
+                        android:textAlignment="textStart"
+                        android:layoutDirection="rtl"
+                        android:enabled="false"
+                        android:text="Security Filter"
+                        android:textColor="#8B8B8B"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        />
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioFamily"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:layout_gravity="start"
+                        android:textAlignment="textStart"
+                        android:text="Family Filter"
+                        android:textColor="#8B8B8B"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        android:layoutDirection="rtl"/>
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioAdult"
+                        android:layout_weight="1"
+                        android:enabled="false"
+                        android:layout_gravity="start"
+                        android:textAlignment="textStart"
+                        android:text="Adult Filter"
+                        android:textColor="#8B8B8B"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        android:layoutDirection="rtl"/>
+                    <RadioButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radioAds"
+                        android:layout_weight="1"
+                        android:text="Ads Filter"
+                        android:enabled="false"
+                        android:layout_gravity="start"
+                        android:textAlignment="textStart"
+                        android:textColor="#8B8B8B"
+                        android:textSize="15dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        android:layoutDirection="rtl"/>
+                </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,3 @@
+include ':app', ':GaugeView'
+rootProject.name='PowerQoPE'
+project(':GaugeView').projectDir = new File('library/GaugeView')

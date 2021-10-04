@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item>
+    <shape android:shape="oval">
+        <solid android:color="#ffffff"/>
+        <size android:height="48dp"
+            android:width="48dp"/>
+        <stroke android:width="1dp"
+            android:color="@color/textColorSecondary"/>
+    </shape>
+</item>
+    <item android:drawable="@drawable/ic_power_settings_new_black_24dp"
+        android:left="12dp"
+        android:right="12dp"
+        android:top="12dp"
+        android:bottom="12dp"
+        />
+</layer-list>
