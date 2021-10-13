@@ -10,8 +10,12 @@ import android.os.Bundle;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import za.ac.uct.cs.powerqope.AdvancedActivity;
+import za.ac.uct.cs.powerqope.Config;
 import za.ac.uct.cs.powerqope.R;
+import za.ac.uct.cs.powerqope.util.PhoneUtils;
+import za.ac.uct.cs.powerqope.utils.WebSocketConnector;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +30,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
 
+    private static final String TAG = "HomeFragment";
 
     public HomeFragment() {
         // Required empty public constructor
@@ -40,6 +48,7 @@ public class HomeFragment extends Fragment {
     LinearLayout connected;
     SwitchCompat switchCompat;
     RadioButton radioButton,radioButton1,radioButton2,radioButton3;
+    String selectedConfig;
     @SuppressLint("ResourceAsColor")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +72,19 @@ public class HomeFragment extends Fragment {
                 }
                 else {
                     if (switchCompat.isChecked()) {
+                        if(!selectedConfig.equals("advanced")){
+                            WebSocketConnector connector = WebSocketConnector.getInstance();
+                            PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
+                            JSONObject payload = new JSONObject();
+                            try {
+                                payload.put("level", selectedConfig);
+                                payload.put("networkType", phoneUtils.getNetworkClass());
+                                payload.put("deviceId", connector.getDeviceId());
+                            } catch (JSONException e) {
+                                Log.e(TAG, "onViewCreated: Error while building JSON");
+                            }
+                            connector.sendMessage(Config.STOMP_SERVER_CONFIG_REQUEST_ENDPOINT, payload.toString());
+                        }
                         Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
                         connected.setBackgroundColor(Color.parseColor("#43A047"));
                     } else {
@@ -77,24 +99,28 @@ public class HomeFragment extends Fragment {
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedConfig = "high";
                 Toast.makeText(getActivity(), "High security selected", Toast.LENGTH_SHORT).show();
             }
         });
         radioButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedConfig = "medium";
                Toast.makeText(getActivity(), "Medium security selected", Toast.LENGTH_SHORT).show();
             }
         });
         radioButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedConfig = "low";
                Toast.makeText(getActivity(), "Low security selected", Toast.LENGTH_SHORT).show();
             }
         });
         radioButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                selectedConfig = "advanced";
                 startActivity(new Intent(getContext(), AdvancedActivity.class));
                 Toast.makeText(getActivity(), "Advanced security options selected", Toast.LENGTH_SHORT).show();
             }

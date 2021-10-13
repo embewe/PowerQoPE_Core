@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import androidx.core.app.NotificationCompat;
-import za.ac.uct.cs.powerqope.activity.HomeActivity;
+import za.ac.uct.cs.powerqope.HomeActivity;
 import za.ac.uct.cs.powerqope.utils.NetworkUtil;
 import za.ac.uct.cs.powerqope.utils.RetrieveData;
 import za.ac.uct.cs.powerqope.utils.StoredData;

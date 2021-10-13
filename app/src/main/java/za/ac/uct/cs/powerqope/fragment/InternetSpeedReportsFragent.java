@@ -8,7 +8,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import za.ac.uct.cs.powerqope.R;
-import za.ac.uct.cs.powerqope.activity.SpeedTestActivity;
+import za.ac.uct.cs.powerqope.SpeedTestActivity;
 import za.ac.uct.cs.powerqope.adapter.EmployeeAdapter;
 import za.ac.uct.cs.powerqope.utils.Employee;
 
