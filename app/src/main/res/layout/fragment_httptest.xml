@@ -11,14 +11,25 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
+        <Spinner
+            android:id="@+id/sites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            />
         <EditText
             android:id="@+id/editText2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="textUri"
             android:text="https://"
             android:textColor="@color/textColorSecondary"/>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -39,19 +50,29 @@
                 android:id="@+id/button_start"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:padding="20dp"
+                android:orientation="vertical"
                 >
-                <Button
-                    android:id="@+id/buttonStart"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:text="Start test"
-                    android:layout_marginTop="10dp"
-                    android:paddingTop="10dp"
-                    android:drawableTop="@drawable/ic_play_circle_outline_black_24dp"
+                <pl.droidsonroids.gif.GifImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/up"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quality of Web Browsing Experience is mainly determined by time taken to load the website in your browser. Use the address bar above to test the performance of the sites you frequently visit."
                     android:textStyle="bold"
-                    android:textColor="@color/textColorSecondary"
-                    android:background="#00FFFFFF"/>
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/textColorSecondary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="We have included 15 of the frequently visited websites globally. However, you can choose the 'custom' option at the end of the list to test website of your choice. Enjoy!"
+                    android:textStyle="bold"
+                    android:textColor="@color/textColorSecondary"/>
+
             </LinearLayout>
 
         </LinearLayout>

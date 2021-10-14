@@ -13,7 +13,24 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
+<style name="ExoMediaButton.Previous">
+    <item name="android:visibility">gone</item>
+</style>
+    <style name="ExoMediaButton.Next">
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="ExoMediaButton.FastForward">
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="ExoMediaButton.Pause">
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="ExoMediaButton.Play">
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="ExoMediaButton.Rewind">
+        <item name="android:visibility">gone</item>
+    </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

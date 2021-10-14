@@ -19,6 +19,7 @@
         <item>@drawable/ic_exit_to_app_black_24dp</item>
     </array>
     <string-array name="advanced_options">
+        <item>System recommended</item>
         <item>CloudFlare Standard</item>
         <item>CloudFlare Security</item>
         <item>CloudFlare Family</item>
@@ -32,6 +33,27 @@
         <item>Quad9 Security</item>
         <item>Custom</item>
     </string-array>
+
+    <string-array name="webSites">
+        <item>Select website to test</item>
+        <item>https://google.com</item>
+        <item>https://youtube.com</item>
+        <item>https://facebook.com</item>
+        <item>https://netflix.com</item>
+        <item>https://microsoft.com</item>
+        <item>https://zol.com.cn</item>
+        <item>https://etoro.com</item>
+        <item>https://anchor.fm</item>
+        <item>https://bidr.io</item>
+        <item>https://googleblog.com</item>
+        <item>https://iop.org</item>
+        <item>https://nbcsports.com</item>
+        <item>https://miamiherald.com</item>
+        <item>https://tiny.cc</item>
+        <item>https://discover.com</item>
+        <item>Custom</item>
+    </string-array>
+
     <string-array name="speedTestRangeValues">
         <item>0</item>
         <item>100</item>

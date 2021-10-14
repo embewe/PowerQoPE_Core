@@ -8,15 +8,23 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import za.ac.uct.cs.powerqope.R;
 
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,29 +35,113 @@ public class HTTPTestFragment extends Fragment {
     public HTTPTestFragment() {
         // Required empty public constructor
     }
-
+    Spinner dropdown;
     private ProgressDialog progDailog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_httptest, container, false);
-        final Button button = v.findViewById(R.id.buttonStart);
+        final LinearLayout buttonView= v.findViewById(R.id.button_start);
         final WebView browser =  v.findViewById(R.id.webview);
         final EditText editText = v.findViewById(R.id.editText2);
+        dropdown = v.findViewById(R.id.sites);
+        String[] advancedOptions = getResources().getStringArray(R.array.webSites);
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(),
+                R.layout.spinner_item2, advancedOptions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        editText.setVisibility(View.GONE);
+        dropdown.setAdapter(adapter);
         WebSettings webSettings = browser.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         browser.getSettings().setLoadWithOverviewMode(true);
         browser.getSettings().setUseWideViewPort(true);
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (dropdown.getSelectedItemPosition()==16){
+                    editText.setVisibility(View.VISIBLE);
+                }
+                else if (dropdown.getSelectedItemPosition()==0){
+                    editText.setVisibility(View.GONE);
+                    browser.setVisibility(View.GONE);
+                    buttonView.setVisibility(View.VISIBLE);
+                }
+                else if (dropdown.getSelectedItemPosition()!=16 && dropdown.getSelectedItemPosition()!=0){
+                    String defaultLink = dropdown.getSelectedItem().toString();
+                    editText.setVisibility(View.GONE);
+                    browser.loadUrl(defaultLink);
+                    progDailog = ProgressDialog.show(getContext(), "Loading", "Please wait...", true);
+                    progDailog.setCancelable(false);
+                    browser.setWebViewClient(new MyBrowser() {
+                        @Override
+                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                            progDailog.show();
+                            view.loadUrl(url);
 
-        button.setOnClickListener(new View.OnClickListener() {
+                            return true;
+                        }
+
+                        @Override
+                        public void onPageFinished(WebView view, final String url) {
+                            buttonView.setVisibility(View.GONE);
+                            browser.setVisibility(View.VISIBLE);
+                            progDailog.dismiss();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        editText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    String link = editText.getText().toString();
+                    if("https://".equals(link)){
+                        Toast.makeText(getActivity(), "Please input link.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    else{
+                        browser.loadUrl(link);
+                        progDailog = ProgressDialog.show(getContext(), "Loading", "Please wait...", true);
+                        progDailog.setCancelable(false);
+                        browser.setWebViewClient(new MyBrowser() {
+                            @Override
+                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                progDailog.show();
+                                view.loadUrl(url);
+
+                                return true;
+                            }
+
+                            @Override
+                            public void onPageFinished(WebView view, final String url) {
+                                buttonView.setVisibility(View.GONE);
+                                browser.setVisibility(View.VISIBLE);
+                                progDailog.dismiss();
+                            }
+                        });}
+                    return true;
+                }
+                return false;
+            }
+        });
+      /*  button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String link = editText.getText().toString();
-                String defaultLink = "https://www.google.com";
-                if ("https://".equals(link)){
-
-                    browser.loadUrl(defaultLink);
+                String defaultLink = dropdown.getSelectedItem().toString();
+                if ("Custom".equals(defaultLink)){
+                    if("https://".equals(link)){
+                        Toast.makeText(getActivity(), "Please input link.", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                    browser.loadUrl(link);
                     progDailog = ProgressDialog.show(getContext(), "Loading", "Please wait...", true);
                     progDailog.setCancelable(false);
                     browser.setWebViewClient(new MyBrowser() {
@@ -67,10 +159,11 @@ public class HTTPTestFragment extends Fragment {
                             browser.setVisibility(View.VISIBLE);
                             progDailog.dismiss();
                         }
-                    });
+                    });}
                 }
+
                 else{
-                browser.loadUrl(link);
+                browser.loadUrl(defaultLink);
                 progDailog = ProgressDialog.show(getContext(), "Loading", "Please wait...", true);
                 progDailog.setCancelable(false);
                 browser.setWebViewClient(new MyBrowser() {
@@ -92,7 +185,7 @@ public class HTTPTestFragment extends Fragment {
             }
             }
 
-        });
+        });*/
 
 
 

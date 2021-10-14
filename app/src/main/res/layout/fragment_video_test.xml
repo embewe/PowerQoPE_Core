@@ -3,31 +3,150 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#292B2B"
     tools:context=".fragment.VideoTestFragment">
 
 
 
-    <FrameLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#292B2B">
+
+                <com.google.android.exoplayer2.ui.PlayerView
+                    android:id="@+id/video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:fastforward_increment="30000"
+                    app:rewind_increment="30000"
+                    app:show_timeout="10000"
+                    android:visibility="gone"
+                    app:resize_mode="fill"
+                    app:show_buffering="when_playing"
+                    android:layout_marginBottom="50dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/button_start"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                >
+                <Button
+                    android:id="@+id/buttonStart"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:text="Start test"
+                    android:layout_marginTop="10dp"
+                    android:paddingTop="10dp"
+                    android:drawableTop="@drawable/ic_play_circle_outline_black_24dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/textColorSecondary"
+                    android:background="#00FFFFFF"/>
+            </LinearLayout>
+<LinearLayout
+    android:id="@+id/results"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone"
+    >
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="#292B2B">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buffered percentage(Buff%): "
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textSize="20sp"
+        android:textColor="@color/textColorSecondary"
+        />
+    <TextView
+        android:id="@+id/debug_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <VideoView
-            android:id="@+id/videoView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-        <Button
-            android:id="@+id/button"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:text="Start"
-            android:padding="15dp"
-            android:drawableTop="@drawable/ic_play_circle_outline_black_24dp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:textColor="@color/colorAccent"
-            android:background="@drawable/shape"/>
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:textSize="20sp"
+        android:textColor="@color/textColorSecondary"
+        tools:ignore="SmallSp" />
+</LinearLayout>
 
-    </FrameLayout>
+</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#292B2B">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Load time(VLT): "
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:textSize="20sp"
+                android:textColor="@color/textColorSecondary"
+                />
+        <TextView
+            android:id="@+id/title_text_view1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textSize="20sp"
+            android:textColor="@color/textColorSecondary"
+            tools:ignore="SmallSp" /></LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bandwidth(BW): "
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:textSize="20sp"
+                android:textColor="@color/textColorSecondary"
+                />
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:textSize="20sp"
+            android:textColor="@color/textColorSecondary"
+            tools:ignore="SmallSp" />
+        </LinearLayout>
+    </LinearLayout></LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
 </FrameLayout>

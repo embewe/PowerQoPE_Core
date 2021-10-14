@@ -75,6 +75,7 @@
                     android:orientation="vertical"
                     android:layout_gravity="center_horizontal">
                     <RadioButton
+                        android:id="@+id/regularDns"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -87,8 +88,34 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="25dp"
                         android:layoutDirection="rtl"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/container">
+                        <Spinner
+                            android:id="@+id/spinner1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="25dp"
+                            android:spinnerMode="dropdown"/>
 
+
+                        <EditText
+                            android:id="@+id/editText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="25dp"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/textColorSecondary"
+                            />
+                    </LinearLayout>
                 <RadioButton
+                    android:id="@+id/dnsOverHttps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -101,7 +128,34 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="25dp"
                     android:layoutDirection="rtl"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/container1">
+                        <Spinner
+                            android:id="@+id/spinner2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="25dp"
+                            android:spinnerMode="dropdown"/>
+
+
+                        <EditText
+                            android:id="@+id/editText2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="25dp"
+                            android:inputType="textPersonName"
+                            android:textColor="@color/textColorSecondary"
+                            />
+                    </LinearLayout>
                 <RadioButton
+                    android:id="@+id/dnsOverTls"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -115,13 +169,33 @@
                     android:layout_marginRight="25dp"
                     android:layoutDirection="rtl"/>
                 </RadioGroup>
-                <TextView
-                    android:id="@+id/advancedDnsSettings"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Advanced DNS Settings"
-                    android:textColor="#ffff"
-                    android:layout_margin="20dp"/>
+                    android:orientation="vertical"
+                    android:id="@+id/container2">
+                    <Spinner
+                        android:id="@+id/spinner3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        android:spinnerMode="dropdown"/>
+
+
+                    <EditText
+                        android:id="@+id/editText3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="25dp"
+                        android:inputType="textPersonName"
+                        android:textColor="@color/textColorSecondary"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
                 <LinearLayout
@@ -168,7 +242,7 @@
                             android:textColor="#ffffff"/>
 
                         <Switch
-                            android:id="@+id/switch30"
+                            android:id="@+id/switchEnableFilter"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -278,10 +352,11 @@
 
 
                     <Switch
-                        android:id="@+id/switch3"
+                        android:id="@+id/switchEnableVpn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+
                         />
                 </LinearLayout>
                 <LinearLayout
@@ -301,29 +376,37 @@
 
 
                     <Switch
-                        android:id="@+id/switch1"
+                        android:id="@+id/switchAutoConnect"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         />
                 </LinearLayout>
                     <TextView
-                        android:id="@+id/advancedVpnSettings"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Advanced VPN Settings"
+                        android:text="Choose server location"
                         android:textColor="#ffff"
-                        android:paddingTop="5dp"
+                        android:paddingTop="10dp"
                         android:paddingLeft="20dp"
                         android:paddingRight="20dp"/>
                     <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="20dp"/>
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"/>
 
             </LinearLayout>
 
-
+        <Button
+            android:id="@+id/configure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save my options"
+            android:layout_margin="20dp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:background="@color/textColor"/>
 
         </LinearLayout>
 
