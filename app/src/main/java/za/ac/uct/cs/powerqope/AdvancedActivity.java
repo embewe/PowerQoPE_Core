@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,24 +24,38 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class AdvancedActivity extends AppCompatActivity {
 
-    LinearLayout back, container,container1,container2;
-    Switch switchEnableFilter, switchEnableVpn, switchAutoConnect;
-    RadioButton radioSecurityFilter, radioFamilyFilter, radioAdsFilter, radioButton4,radioButton5,radioButton6;
-    TextView textView,textView2;
+    private static final String TAG = "AdvancedActivity";
+
+    LinearLayout back, container, container1, container2;
+    Switch switchEnableVpn, switchAutoConnect;
+    RadioButton radioButton4, radioButton5, radioButton6;
     EditText editText, editText2, editText3;
-    Spinner dropdown, dropdown1, dropdown2;
+    Spinner dropdown, dropdown1, dropdown2, dropdown3;
+    String[] advancedOptions;
+    List<String> filterOptions = new ArrayList<String>() {{
+        add("No Filter");
+    }};
     Button configure;
     Context mContext;
-    String MY_PREFS_NAME="preferences";
+    String MY_PREFS_NAME = "preferences";
+    DNS_TYPES selDNSType = null;
+
+    enum DNS_TYPES {Do53, DoT, DoH}
+
+    String selDNSProvider = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_advanced);
-        switchEnableFilter = findViewById(R.id.switchEnableFilter);
+        advancedOptions = getResources().getStringArray(R.array.dns_providers);
         switchEnableVpn = findViewById(R.id.switchEnableVpn);
         editText = findViewById(R.id.editText);
         editText2 = findViewById(R.id.editText2);
@@ -53,35 +68,32 @@ public class AdvancedActivity extends AppCompatActivity {
         radioButton4 = findViewById(R.id.regularDns);
         radioButton5 = findViewById(R.id.dnsOverHttps);
         radioButton6 = findViewById(R.id.dnsOverTls);
-        radioSecurityFilter = findViewById(R.id.radioSecurity);
-        radioFamilyFilter = findViewById(R.id.radioFamily);
-        radioAdsFilter = findViewById(R.id.radioAds);
         dropdown = findViewById(R.id.spinner1);
         dropdown1 = findViewById(R.id.spinner2);
         dropdown2 = findViewById(R.id.spinner3);
+        dropdown3 = findViewById(R.id.spinner4);
         switchAutoConnect = findViewById(R.id.switchAutoConnect);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        switchEnableFilter.setChecked(prefs.getBoolean("switchEnableFilter",false));
-        switchEnableVpn.setChecked(prefs.getBoolean("switchEnableVpn",false));
-        radioButton4.setChecked(prefs.getBoolean("radio",false));
-        radioButton5.setChecked(prefs.getBoolean("radio1",false));
-        radioButton6.setChecked(prefs.getBoolean("radio2",false));
-        radioSecurityFilter.setChecked(prefs.getBoolean("radioSecurityFilter",false));
-        radioFamilyFilter.setChecked(prefs.getBoolean("radioFamilyFilter",false));
-        radioAdsFilter.setChecked(prefs.getBoolean("radioAdsFilter",false));
-        switchAutoConnect.setChecked(prefs.getBoolean("switchAutoConnect",false));
+        switchEnableVpn.setChecked(prefs.getBoolean("switchEnableVpn", false));
+        radioButton4.setChecked(prefs.getBoolean("radio", false));
+        radioButton5.setChecked(prefs.getBoolean("radio1", false));
+        radioButton6.setChecked(prefs.getBoolean("radio2", false));
+        switchAutoConnect.setChecked(prefs.getBoolean("switchAutoConnect", false));
         if (radioButton4.isChecked() == true) {
             container.setVisibility(View.VISIBLE);
+            selDNSType = DNS_TYPES.Do53;
         } else {
             container.setVisibility(View.GONE);
         }
         if (radioButton5.isChecked() == true) {
             container1.setVisibility(View.VISIBLE);
+            selDNSType = DNS_TYPES.DoH;
         } else {
             container1.setVisibility(View.GONE);
         }
         if (radioButton6.isChecked() == true) {
             container2.setVisibility(View.VISIBLE);
+            selDNSType = DNS_TYPES.DoT;
         } else {
             container2.setVisibility(View.GONE);
         }
@@ -93,7 +105,6 @@ public class AdvancedActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        String[] advancedOptions = getResources().getStringArray(R.array.advanced_options);
         ArrayAdapter adapter = new ArrayAdapter(this,
                 R.layout.spinner_item2, advancedOptions);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -102,96 +113,38 @@ public class AdvancedActivity extends AppCompatActivity {
         dropdown1.setAdapter(adapter);
         dropdown2.setAdapter(adapter);
 
+        ArrayAdapter adapter1 = new ArrayAdapter(AdvancedActivity.this,
+                R.layout.spinner_item2, filterOptions);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropdown3.setAdapter(adapter1);
+
         switchAutoConnect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (switchAutoConnect.isChecked() == true) {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("switchAutoConnect",true);
+                    editor.putBoolean("switchAutoConnect", true);
                     editor.apply();
-                }
-                else {
+                } else {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("switchAutoConnect",false);
+                    editor.putBoolean("switchAutoConnect", false);
                     editor.apply();
                 }
             }
-        });
-        radioSecurityFilter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (radioSecurityFilter.isChecked() == true) {
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioSecurityFilter",true);
-                    editor.apply();
-                }
-                else {
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioSecurityFilter",false);
-                    editor.apply();
-                }}
-                                                });
-
-        radioFamilyFilter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (radioFamilyFilter.isChecked() == true) {
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioFamilyFilter",true);
-                    editor.apply();
-                }
-                else {
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioFamilyFilter",false);
-                    editor.apply();
-                }}
-        });
-
-        radioAdsFilter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (radioAdsFilter.isChecked() == true) {
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioAdsFilter",true);
-                    editor.apply();
-                }
-                else {
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioAdsFilter",false);
-                    editor.apply();
-                }}
         });
         radioButton4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (radioButton4.isChecked() == true) {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radio",true);
+                    editor.putBoolean("radio", true);
                     editor.apply();
                     container.setVisibility(View.VISIBLE);
-                    dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                            if (dropdown.getSelectedItemPosition() == 12) {
-                                editText.setEnabled(true);
-                                SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                                editor.putString("editText",editText.getText().toString());
-                                editor.apply();
-                            } else if (dropdown.getSelectedItemPosition() != 12) {
-                                editText.setEnabled(false);
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
-
+                    dropdown.setOnItemSelectedListener(new DNSItemChangeListener(editText));
 
                 } else {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radio",false);
+                    editor.putBoolean("radio", false);
                     editor.apply();
                     container.setVisibility(View.GONE);
                     editText.setEnabled(false);
@@ -203,29 +156,15 @@ public class AdvancedActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (radioButton5.isChecked() == true) {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radio1",true);
+                    editor.putBoolean("radio1", true);
                     editor.apply();
                     container1.setVisibility(View.VISIBLE);
-                    dropdown1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                            if (dropdown1.getSelectedItemPosition() == 12) {
-                                editText2.setEnabled(true);
-                            } else if (dropdown1.getSelectedItemPosition() != 12) {
-                                editText2.setEnabled(false);
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
+                    dropdown1.setOnItemSelectedListener(new DNSItemChangeListener(editText2));
 
 
                 } else {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radio1",false);
+                    editor.putBoolean("radio1", false);
                     editor.apply();
                     container1.setVisibility(View.GONE);
                     editText2.setEnabled(false);
@@ -237,138 +176,53 @@ public class AdvancedActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (radioButton6.isChecked() == true) {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radio2",true);
+                    editor.putBoolean("radio2", true);
                     editor.apply();
                     container2.setVisibility(View.VISIBLE);
-                    dropdown2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                            if (dropdown2.getSelectedItemPosition() == 12) {
-                                editText3.setEnabled(true);
-                            } else if (dropdown2.getSelectedItemPosition() != 12) {
-                                editText3.setEnabled(false);
-                            }
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> adapterView) {
-
-                        }
-                    });
-
-
+                    dropdown2.setOnItemSelectedListener(new DNSItemChangeListener(editText3));
                 } else {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radio2",false);
+                    editor.putBoolean("radio2", false);
                     editor.apply();
                     container2.setVisibility(View.GONE);
                     editText3.setEnabled(false);
                 }
             }
         });
-        if(switchEnableFilter.isChecked()==true){
-            radioSecurityFilter.setEnabled(true);
-            radioFamilyFilter.setEnabled(true);
-            radioAdsFilter.setEnabled(true);
-            radioSecurityFilter.setTextColor(Color.parseColor("#ffffff"));
-            radioFamilyFilter.setTextColor(Color.parseColor("#ffffff"));
-            radioAdsFilter.setTextColor(Color.parseColor("#ffffff"));
-
-        }
-        else {
-            radioSecurityFilter.setEnabled(false);
-            radioFamilyFilter.setEnabled(false);
-            radioAdsFilter.setEnabled(false);
-            radioSecurityFilter.setTextColor(Color.parseColor("#8B8B8B"));
-            radioFamilyFilter.setTextColor(Color.parseColor("#8B8B8B"));
-            radioAdsFilter.setTextColor(Color.parseColor("#8B8B8B"));
-
-        }
-        switchEnableFilter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (switchEnableFilter.isChecked()==true) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(AdvancedActivity.this);
-                            builder.setCancelable(true);
-                            builder.setTitle("Alert");
-                            builder.setMessage("With this configuration some websites may break or may be unreachable.");
-                            builder.setPositiveButton("Confirm",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            switchEnableFilter.setChecked(true);
-                                            SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                                            editor.putBoolean("switchEnableFilter",true);
-                                            editor.apply();
-                                            Toast.makeText(getApplicationContext(), "Filtering settings enabled", Toast.LENGTH_LONG).show();
-                                            radioSecurityFilter.setEnabled(true);
-                                            radioFamilyFilter.setEnabled(true);
-                                            radioAdsFilter.setEnabled(true);
-                                            radioSecurityFilter.setTextColor(Color.parseColor("#ffffff"));
-                                            radioFamilyFilter.setTextColor(Color.parseColor("#ffffff"));
-                                            radioAdsFilter.setTextColor(Color.parseColor("#ffffff"));
-                                        }
-                                    });
-                            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switchEnableFilter.setChecked(false);
-
-                                }
-                            });
-
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Filtering settings disabled", Toast.LENGTH_SHORT).show();
-                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("switchEnableFilter",false);
-                    editor.apply();
-                    radioSecurityFilter.setEnabled(false);
-                    radioFamilyFilter.setEnabled(false);
-                    radioAdsFilter.setEnabled(false);
-                    radioSecurityFilter.setTextColor(Color.parseColor("#8B8B8B"));
-                    radioFamilyFilter.setTextColor(Color.parseColor("#8B8B8B"));
-                    radioAdsFilter.setTextColor(Color.parseColor("#8B8B8B"));
-                }
-            }
-        });
         switchEnableVpn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (switchEnableVpn.isChecked()==true) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(AdvancedActivity.this);
-                builder.setCancelable(true);
-                builder.setTitle("Alert");
-                builder.setMessage("This is a more private option. However, the internet may be slower.");
-                builder.setPositiveButton("Confirm",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switchEnableVpn.setChecked(true);
-                                Toast.makeText(getApplicationContext(), "VPN on", Toast.LENGTH_LONG).show();
-                                SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                                editor.putBoolean("switchEnableVpn",true);
-                                editor.apply();
-                            }
-                        });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switchEnableVpn.setChecked(false);
+                if (switchEnableVpn.isChecked() == true) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AdvancedActivity.this);
+                    builder.setCancelable(true);
+                    builder.setTitle("Alert");
+                    builder.setMessage("This is a more private option. However, the internet may be slower.");
+                    builder.setPositiveButton("Confirm",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switchEnableVpn.setChecked(true);
+                                    Toast.makeText(getApplicationContext(), "VPN on", Toast.LENGTH_LONG).show();
+                                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                                    editor.putBoolean("switchEnableVpn", true);
+                                    editor.apply();
+                                }
+                            });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switchEnableVpn.setChecked(false);
 
-                    }
-                });
+                        }
+                    });
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
                 } else {
                     Toast.makeText(getApplicationContext(), "VPN off", Toast.LENGTH_LONG).show();
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("switchEnableVpn",false);
+                    editor.putBoolean("switchEnableVpn", false);
                     editor.apply();
                 }
             }
@@ -379,6 +233,76 @@ public class AdvancedActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    private class DNSItemChangeListener implements AdapterView.OnItemSelectedListener {
+
+        private EditText et;
+
+        public DNSItemChangeListener(EditText et){
+            this.et = et;
+        }
+
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            selDNSProvider = advancedOptions[i];
+            switch (selDNSProvider) {
+                case "CloudFlare":
+                    filterOptions.clear();
+                    filterOptions.add("Standard");
+                    filterOptions.add("Security");
+                    filterOptions.add("Family");
+                    et.setEnabled(false);
+                    break;
+                case "CleanBrowsing":
+                    filterOptions.clear();
+                    filterOptions.add("Standard");
+                    filterOptions.add("Adult");
+                    filterOptions.add("Family");
+                    et.setEnabled(false);
+                    break;
+                case "AdGuard":
+                    filterOptions.clear();
+                    filterOptions.add("Ads");
+                    filterOptions.add("Family");
+                    et.setEnabled(false);
+                    break;
+                case "Google":
+                    filterOptions.clear();
+                    filterOptions.add("No filter available");
+                    et.setEnabled(false);
+                    break;
+                case "Quad9":
+                    filterOptions.clear();
+                    filterOptions.add("Standard");
+                    filterOptions.add("Security");
+                    et.setEnabled(false);
+                    break;
+                case "Custom":
+                    filterOptions.clear();
+                    filterOptions.add("Custom Filter");
+                    et.setEnabled(true);
+                    SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                    editor.putString("editText", et.getText().toString());
+                    editor.apply();
+                    break;
+                default:
+                    filterOptions.clear();
+                    filterOptions.add("System Filter");
+                    et.setEnabled(false);
+                    break;
+            }
+            ArrayAdapter adapter = new ArrayAdapter(AdvancedActivity.this,
+                    R.layout.spinner_item2, filterOptions);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            dropdown3.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
     }
 
 }

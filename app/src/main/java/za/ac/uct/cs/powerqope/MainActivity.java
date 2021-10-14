@@ -1,9 +1,15 @@
 package za.ac.uct.cs.powerqope;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.net.VpnService;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,12 +27,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import za.ac.uct.cs.powerqope.AdvancedActivity;
+import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
+import za.ac.uct.cs.powerqope.dns.DNSFilterService;
 import za.ac.uct.cs.powerqope.fragment.HTTPTestFragment;
 import za.ac.uct.cs.powerqope.fragment.HomeFragment;
 import za.ac.uct.cs.powerqope.fragment.ReportsFragment;
@@ -36,6 +45,9 @@ import za.ac.uct.cs.powerqope.fragment.VideoTestFragment;
 import za.ac.uct.cs.powerqope.menu.DrawerAdapter;
 import za.ac.uct.cs.powerqope.menu.DrawerItem;
 import za.ac.uct.cs.powerqope.menu.SimpleItem;
+import za.ac.uct.cs.powerqope.util.PhoneUtils;
+import za.ac.uct.cs.powerqope.util.Util;
+import za.ac.uct.cs.powerqope.util.WebSocketConnector;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
@@ -49,7 +61,6 @@ import java.util.Properties;
 public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener {
 
     private static final String TAG = "MainActivity";
-    private static final int START_REMOTE_VPN_PROFILE = 70;
 
     private static MainActivity app;
 
@@ -86,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         startDNSSvc();
                     } else{
-                        Log`.e(TAG, "VPN dialog not accepted!\r\nPress restart to display dialog again!");
+                        Log.e(TAG, "VPN dialog not accepted!\r\nPress restart to display dialog again!");
                     }
                 }
             });

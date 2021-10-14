@@ -18,6 +18,17 @@
         <item>@drawable/ic_help_black_24dp</item>
         <item>@drawable/ic_exit_to_app_black_24dp</item>
     </array>
+
+    <string-array name="dns_providers">
+        <item>System recommended</item>
+        <item>CloudFlare</item>
+        <item>CleanBrowsing</item>
+        <item>AdGuard</item>
+        <item>Google</item>
+        <item>Quad9</item>
+        <item>Custom</item>
+    </string-array>
+
     <string-array name="advanced_options">
         <item>System recommended</item>
         <item>CloudFlare Standard</item>
