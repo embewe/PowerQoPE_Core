@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#292B2B"
     tools:context=".fragment.HomeFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textColorSecondary"
-            android:textStyle="bold"
-            android:gravity="center"
 
-            android:layout_margin="30dp"
-            android:text="Welcome to personal Quality of Protection and Experience companion. Configure your desired level of protection and enjoy!" />
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:gravity="center"
+                android:text="Welcome to personal Quality of Protection and Experience companion. Configure your desired level of protection and enjoy!"
+
+                android:textColor="@color/textColorSecondary"
+                android:textStyle="bold" />
+        </LinearLayout>
 
 
         <LinearLayout
@@ -33,92 +36,97 @@
 
             >
 
-<RadioGroup
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_gravity="center_horizontal">
-    <RadioButton
-    android:id="@+id/radioButton"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="High Security"
-        android:textSize="17dp"
-    android:textColor="#ffff"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="High security cost information"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="33dp"
-        android:textColor="@color/textColorSecondary"/>
-    <RadioButton
-        android:id="@+id/radioButton1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Medium Security"
-        android:textSize="17dp"
-        android:textColor="#ffff"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="High security cost information"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="33dp"
-        android:textColor="@color/textColorSecondary"/>
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
 
-    <RadioButton
-        android:id="@+id/radioButton2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Low Security"
-        android:textSize="17dp"
-        android:textColor="#ffff"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="High security cost information"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="33dp"
-        android:textColor="@color/textColorSecondary"/>
+                <RadioButton
+                    android:id="@+id/radioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="High Security"
+                    android:textColor="#ffff"
+                    android:textSize="17dp" />
 
-    <RadioButton
-        android:id="@+id/radioButton3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Advanced Options"
-        android:textSize="17dp"
-        android:textColor="#ffff"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="select VPN, DNS, Filter, Cipher options"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="33dp"
-        android:textColor="@color/textColorSecondary"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="33dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="High security cost information"
+                    android:textColor="@color/textColorSecondary" />
 
-</RadioGroup>
+                <RadioButton
+                    android:id="@+id/radioButton1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Medium Security"
+                    android:textColor="#ffff"
+                    android:textSize="17dp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="33dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="High security cost information"
+                    android:textColor="@color/textColorSecondary" />
+
+                <RadioButton
+                    android:id="@+id/radioButton2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Low Security"
+                    android:textColor="#ffff"
+                    android:textSize="17dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="33dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="High security cost information"
+                    android:textColor="@color/textColorSecondary" />
+
+                <RadioButton
+                    android:id="@+id/radioButton3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Advanced Options"
+                    android:textColor="#ffff"
+                    android:textSize="17dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="33dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="select VPN, DNS, Filter, Cipher options"
+                    android:textColor="@color/textColorSecondary" />
+
+            </RadioGroup>
 
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/click"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            >
+            android:gravity="center_horizontal">
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:thumb="@drawable/thumb2"
-                app:track="@drawable/track"
+                android:layout_margin="20dp"
                 android:scaleX="1.1"
                 android:scaleY="1.1"
-                android:layout_margin="20dp"
+                android:thumb="@drawable/thumb2"
                 app:switchMinWidth="120dp"
-                />
+                app:track="@drawable/track" />
 
         </LinearLayout>
 
@@ -127,28 +135,27 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="bottom">
-        <LinearLayout
-            android:id="@+id/connected"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
 
-
-            <TextView
-                android:id="@+id/measurements"
+            <LinearLayout
+                android:id="@+id/connected"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text=""
-                android:gravity="center_horizontal"
-                android:textColor="#ffffff"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
 
+                <TextView
+                    android:id="@+id/measurements"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:text="VPN Permission required"
+                    android:textSize="18sp"
+                    android:textColor="#ffffff" />
 
-        </LinearLayout>
+
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
-
 
 
 </FrameLayout>

@@ -20,6 +20,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -50,6 +53,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import za.ac.uct.cs.powerqope.AdvancedActivity;
 import za.ac.uct.cs.powerqope.Config;
 import za.ac.uct.cs.powerqope.Logger;
 import za.ac.uct.cs.powerqope.R;

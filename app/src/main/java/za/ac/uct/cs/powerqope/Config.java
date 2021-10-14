@@ -1,5 +1,7 @@
 package za.ac.uct.cs.powerqope;
 
+import java.util.Map;
+
 public interface Config {
     long WELCOME_SCREEN_DURATION_MSEC = 1500;
 
@@ -101,4 +103,5 @@ public interface Config {
     String STOMP_SERVER_TASKS_ENDPOINT = "/user/%s/queue/jobs";
     String STOMP_SERVER_CONFIG_REQUEST_ENDPOINT = "/device/security-config";
     String STOMP_SERVER_CONFIG_RESPONSE_ENDPOINT = "/user/%s/queue/best-config";
+
 }

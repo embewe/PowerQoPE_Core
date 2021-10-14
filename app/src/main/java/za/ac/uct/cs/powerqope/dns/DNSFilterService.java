@@ -730,7 +730,6 @@ public class DNSFilterService extends VpnService {
                         .setSmallIcon(R.drawable.icon)
                         .setContentIntent(pendingIntent)
                         //.setContentIntent(pause_resume_Intent)
-                        .addAction(0, getResources().getString(R.string.switch_pause_resume), pause_resume_Intent)
                         .build();
 
                 updateNotification();

@@ -73,14 +73,13 @@ public class WebSocketConnector {
         }};
     }
 
-    private void modifyConfig(JSONObject filter, JSONObject cipher) {
+    public void modifyConfig(JSONObject filter, JSONObject cipher) {
         try {
             boolean changed = false;
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             String ln;
             String filterValue;
             String secLevel;
-            String secLevelBefore = CONFIG.getConfig().getProperty("secLevel", "default");
             switch (filter.getString("dnsType")) {
                 case "dot":
                     filterValue = filter.getString("ipAddress") + "::853::DoT";
@@ -105,7 +104,7 @@ public class WebSocketConnector {
                 else if (ln.trim().startsWith("fallbackDNS"))
                     ln = "fallbackDNS = " + filterValue;
 
-                else if (ln.trim().startsWith("cipher"))
+                else if (ln.trim().startsWith("cipher") && cipher != null)
                     ln = "cipher = " + cipher.getString("tlsVersion") + ":" + cipher.getString("name");
 
                 else if (ln.trim().startsWith("secLevel"))
@@ -198,9 +197,6 @@ public class WebSocketConnector {
                 JSONObject cipher = config.getJSONObject("cipher");
                 // Write filter to file
                 modifyConfig(filter, cipher);
-                if (filter.getString("dnsType").equalsIgnoreCase("doh")) {
-                    loadVpnProfile(config.getJSONObject("vpn"), filter.getString("ipAddress"));
-                }
             } catch (JSONException e) {
                 Log.e(TAG, "subscribeToSecurityConfig: Error parsing JSON from server");
                 Log.e(TAG, "subscribeToSecurityConfig: " + e.getMessage());

@@ -8,11 +8,17 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.BehaviorSubject;
 import za.ac.uct.cs.powerqope.AdvancedActivity;
 import za.ac.uct.cs.powerqope.Config;
 import za.ac.uct.cs.powerqope.R;
+import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
 import za.ac.uct.cs.powerqope.util.PhoneUtils;
 import za.ac.uct.cs.powerqope.util.WebSocketConnector;
 
@@ -36,6 +42,11 @@ import static android.content.Context.MODE_PRIVATE;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,11 +62,14 @@ public class HomeFragment extends Fragment {
 
     LinearLayout connected;
     SwitchCompat switchCompat;
-    RadioButton radioButton,radioButton1,radioButton2,radioButton3;
+    RadioButton radioButton, radioButton1, radioButton2, radioButton3;
+    static TextView serverInfo;
 
-    String MY_PREFS_NAME="preferences";
+    String MY_PREFS_NAME = "preferences";
 
-    String selectedConfig = "default";
+    String selectedConfig;
+
+    ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -69,25 +83,51 @@ public class HomeFragment extends Fragment {
         radioButton1 = v.findViewById(R.id.radioButton1);
         radioButton2 = v.findViewById(R.id.radioButton2);
         radioButton3 = v.findViewById(R.id.radioButton3);
+        serverInfo = v.findViewById(R.id.measurements);
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        switchCompat.setChecked(prefs.getBoolean("connect",false));
-        radioButton.setChecked(prefs.getBoolean("radioButton",false));
-        radioButton1.setChecked(prefs.getBoolean("radioButton1",false));
-        radioButton2.setChecked(prefs.getBoolean("radioButton2",false));
-        radioButton3.setChecked(prefs.getBoolean("radioButton3",false));
+        switchCompat.setChecked(prefs.getBoolean("connect", false));
+        radioButton.setChecked(prefs.getBoolean("radioButton", false));
+        radioButton1.setChecked(prefs.getBoolean("radioButton1", false));
+        radioButton2.setChecked(prefs.getBoolean("radioButton2", false));
+        radioButton3.setChecked(prefs.getBoolean("radioButton3", false));
+
+        selectedConfig =
+                (radioButton.isChecked() ? "high" :
+                    (radioButton1.isChecked() ? "medium" :
+                        (radioButton2.isChecked() ? "low" :
+                                (radioButton3.isChecked() ? "advanced" : "default"))));
+
+        String advancedFilter = prefs.getString("advancedFilter", null);
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (radioButton.isChecked()==false && radioButton1.isChecked() == false && radioButton2.isChecked() == false && radioButton3.isChecked()== false){
+                if (radioButton.isChecked() == false && radioButton1.isChecked() == false && radioButton2.isChecked() == false && radioButton3.isChecked() == false) {
                     Toast.makeText(getActivity(), "Please select any of the above configurations.", Toast.LENGTH_SHORT).show();
                     switchCompat.setChecked(false);
-
-                }
-                else {
+                } else {
                     if (switchCompat.isChecked()) {
-                        if(!selectedConfig.equals("advanced")){
+                        if (selectedConfig.equalsIgnoreCase("advanced")) {
+                            Intent intent = getActivity().getIntent();
+                            Bundle extras = intent.getExtras();
+                            if (extras != null) {
+                                String options = extras.getString("advancedOptions");
+                                WebSocketConnector connector = WebSocketConnector.getInstance();
+                                try {
+                                    connector.modifyConfig(new JSONObject(options), null);
+                                } catch (JSONException e) {
+                                    Log.e(TAG, "onCheckedChanged: Error parsing JSON");
+                                }
+                            } else if (advancedFilter != null) {
+                                WebSocketConnector connector = WebSocketConnector.getInstance();
+                                try {
+                                    connector.modifyConfig(new JSONObject(advancedFilter), null);
+                                } catch (JSONException e) {
+                                    Log.e(TAG, "onCheckedChanged: Error parsing JSON");
+                                }
+                            }
+                        } else {
                             WebSocketConnector connector = WebSocketConnector.getInstance();
                             PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
                             JSONObject payload = new JSONObject();
@@ -103,13 +143,15 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
                         connected.setBackgroundColor(Color.parseColor("#43A047"));
                         SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                        editor.putBoolean("connect",true);
+                        editor.putBoolean("connect", true);
                         editor.apply();
                     } else {
+                        selectedConfig = "default";
+                        restoreDefaults();
                         Toast.makeText(getActivity(), "Disconnected", Toast.LENGTH_SHORT).show();
                         connected.setBackgroundColor(Color.parseColor("#292B2B"));
                         SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                        editor.putBoolean("connect",false);
+                        editor.putBoolean("connect", false);
                         editor.apply();
                     }
                 }
@@ -119,72 +161,78 @@ public class HomeFragment extends Fragment {
         radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (radioButton.isChecked()==true){
+                if (radioButton.isChecked() == true) {
+                    switchCompat.setChecked(false);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioButton",true);
+                    editor.putBoolean("radioButton", true);
                     editor.apply();
-                Toast.makeText(getActivity(), "High security selected", Toast.LENGTH_SHORT).show();
-                selectedConfig = "high";
-            }else {
+                    Toast.makeText(getActivity(), "High security selected", Toast.LENGTH_SHORT).show();
+                    selectedConfig = "high";
+                } else {
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioButton",false);
+                    editor.putBoolean("radioButton", false);
                     editor.apply();
-                }}
+                }
+            }
         });
         radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if (radioButton1.isChecked()==true) {
+                if (radioButton1.isChecked() == true) {
+                    switchCompat.setChecked(false);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioButton1",true);
+                    editor.putBoolean("radioButton1", true);
                     editor.apply();
                     Toast.makeText(getActivity(), "Medium security selected", Toast.LENGTH_SHORT).show();
                     selectedConfig = "medium";
-                }else {
+                } else {
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-                    editor.putBoolean("radioButton1",false);
+                    editor.putBoolean("radioButton1", false);
                     editor.apply();
                 }
-                }
+            }
         });
         radioButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if (radioButton2.isChecked()==true) {
+                if (radioButton2.isChecked() == true) {
+                    switchCompat.setChecked(false);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton2", true);
                     editor.apply();
                     Toast.makeText(getActivity(), "Low security selected", Toast.LENGTH_SHORT).show();
                     selectedConfig = "low";
-                }else {
+                } else {
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton2", false);
                     editor.apply();
                 }
-                }
+            }
         });
         radioButton3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if (radioButton3.isChecked()==true) {
+                if (radioButton3.isChecked() == true) {
+                    switchCompat.setChecked(false);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton3", true);
                     editor.apply();
+                    Toast.makeText(getActivity(), "Advanced security options selected", Toast.LENGTH_SHORT).show();
+                    selectedConfig = "advanced";
                     Intent intent = new Intent(getContext(), AdvancedActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(intent);
-                    Toast.makeText(getActivity(), "Advanced security options selected", Toast.LENGTH_SHORT).show();
-                    selectedConfig = "advanced";
-                }else {
+                } else {
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton3", false);
                     editor.apply();
                 }
             }
         });
+
        /*  click.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
             @Override
@@ -215,6 +263,41 @@ public class HomeFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerAdvancedOptions.setAdapter(adapter);*/
         return v;
+    }
+
+    private void restoreDefaults(){
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        String ln;
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(CONFIG.readConfig())));
+            while ((ln = reader.readLine()) != null) {
+                if (ln.trim().startsWith("detectDNS"))
+                    ln = "detectDNS = true";
+
+                else if (ln.trim().startsWith("fallbackDNS"))
+                    ln = "fallbackDNS = ";
+
+                else if (ln.trim().startsWith("cipher"))
+                    ln = "cipher = ";
+
+                else if (ln.trim().startsWith("secLevel"))
+                    ln = "secLevel = default";
+
+                out.write((ln + "\r\n").getBytes());
+            }
+
+            reader.close();
+            out.flush();
+            out.close();
+
+            CONFIG.updateConfig(out.toByteArray());
+        } catch (Exception e){
+            Log.e(TAG, "restoreDefaults: " + e.getMessage());
+        }
+    }
+
+    public static void setServerInfo(String info){
+        serverInfo.setText("Connected to : " + info);
     }
 
 }
