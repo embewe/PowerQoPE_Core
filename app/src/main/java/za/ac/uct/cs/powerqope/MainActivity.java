@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.VpnService;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -53,6 +54,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.Security;
 import java.util.Arrays;
 import java.util.Properties;
@@ -108,24 +111,15 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
         app = this;
         setContentView(R.layout.activity_main);
 
+        ResolveTarget job = new ResolveTarget();
+        job.execute();
+
         System.setProperty("networkaddress.cache.ttl", "0");
         System.setProperty("networkaddress.cache.negative.ttl", "0");
         Security.setProperty("networkaddress.cache.ttl", "0");
         Security.setProperty("networkaddress.cache.negative.ttl", "0");
 
         AndroidEnvironment.initEnvironment(this);
-
-        if (target == null) {
-            target = Util.getWebSocketTarget();
-            SharedPreferences prefs = getSharedPreferences(Config.PREF_KEY_RESOLVED_TARGET, MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(Config.PREF_KEY_RESOLVED_TARGET, target);
-            editor.apply();
-            WebSocketConnector webSocketConnector = WebSocketConnector.getInstance();
-            WebSocketConnector.setContext(getBaseContext());
-            if (!webSocketConnector.isConnected())
-                webSocketConnector.connectWebSocket(target);
-        }
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -389,6 +383,35 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             if (grantResults.length == 0)
                 Log.e(TAG, "grantResults is empty - Assuming permission denied!");
             System.exit(-1);
+        }
+    }
+
+    private class ResolveTarget extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String[] params) {
+            String serverIP = null;
+            try {
+                InetAddress inetAddress = InetAddress.getByName(Config.SERVER_HOST_ADDRESS);
+                serverIP = inetAddress.getHostAddress();
+            }
+            catch (UnknownHostException e){
+                e.printStackTrace();
+            }
+            return serverIP;
+        }
+
+        @Override
+        protected void onPostExecute(String message) {
+            target = "wss://" + message + ":" + Config.SERVER_PORT + Config.STOMP_SERVER_CONNECT_ENDPOINT;
+            SharedPreferences prefs = getSharedPreferences(Config.PREF_KEY_RESOLVED_TARGET, MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(Config.PREF_KEY_RESOLVED_TARGET, target);
+            editor.apply();
+            WebSocketConnector webSocketConnector = WebSocketConnector.getInstance();
+            WebSocketConnector.setContext(getBaseContext());
+            if (!webSocketConnector.isConnected())
+                webSocketConnector.connectWebSocket(target);
         }
     }
 }

@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -255,12 +256,6 @@ public class Util {
       e.printStackTrace();
     }
     return null;
-  }
-
-  public static String getWebSocketTarget() {
-    String serverIP = resolveServer();
-    Log.i(TAG, "getWebSocketTarget: "+serverIP);
-    return "wss://" + serverIP + ":" + Config.SERVER_PORT + Config.STOMP_SERVER_CONNECT_ENDPOINT;
   }
 
   public static String hashTimeStamp() {

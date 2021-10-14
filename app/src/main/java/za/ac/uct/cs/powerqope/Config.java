@@ -89,8 +89,8 @@ public interface Config {
 
     /** Constants to access the server **/
     String SERVER_ADDRESS="192.168.1.77";
-    int SERVER_PORT=7800;
-    String SERVER_HOST_ADDRESS = "192.168.1.77";
+    int SERVER_PORT=8080;
+    String SERVER_HOST_ADDRESS = "lab.enockmbewe.com";
     /** Enum for all the permissions that we need*/
     enum PERMISSION_IDS {
         INTERNET, GET_ACCOUNTS, READ_PHONE_STATE, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE, WAKE_LOCK, RECEIVE_BOOT_COMPLETED, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION
