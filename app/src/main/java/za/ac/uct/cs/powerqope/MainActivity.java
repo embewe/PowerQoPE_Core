@@ -134,10 +134,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        PhoneUtils.setGlobalContext(this.getApplicationContext());
-        PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
-        phoneUtils.registerSignalStrengthListener();
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new
                                                                          BottomNavigationView.OnNavigationItemSelectedListener() {
                                                                              @Override
@@ -385,8 +381,12 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED)
                     allPermissionsGranted = false;
             }
-            if (allPermissionsGranted)
+            if (allPermissionsGranted) {
+                PhoneUtils.setGlobalContext(this.getApplicationContext());
+                PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
+                phoneUtils.registerSignalStrengthListener();
                 loadAndApplyConfig(true);
+            }
         } else {
             if (grantResults.length == 0)
                 Log.e(TAG, "grantResults is empty - Assuming permission denied!");
