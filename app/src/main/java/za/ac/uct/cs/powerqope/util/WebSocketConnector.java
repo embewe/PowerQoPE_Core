@@ -24,11 +24,6 @@ import java.util.Vector;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
-import de.blinkt.openvpn.VpnProfile;
-import de.blinkt.openvpn.core.ConfigParser;
-import de.blinkt.openvpn.core.OpenVPNService;
-import de.blinkt.openvpn.core.ProfileManager;
-import de.blinkt.openvpn.core.VPNLaunchHelper;
 import io.reactivex.CompletableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -83,16 +78,16 @@ public class WebSocketConnector {
             switch (filter.getString("dnsType")) {
                 case "dot":
                     filterValue = filter.getString("ipAddress") + "::853::DoT";
-                    secLevel = "medium";
+                    secLevel = (cipher == null ? "advanced" : "medium");
                     break;
                 case "doh":
                     String url = filter.getString("url");
                     filterValue = filter.getString("ipAddress") + "::443::DoH::" + url;
-                    secLevel = "high";
+                    secLevel = (cipher == null ? "advanced" : "high");
                     break;
                 default:
                     filterValue = filter.getString("ipAddress");
-                    secLevel = "low";
+                    secLevel = (cipher == null ? "advanced" : "low");
                     break;
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(CONFIG.readConfig())));
@@ -109,7 +104,8 @@ public class WebSocketConnector {
 
                 else if (ln.trim().startsWith("secLevel"))
                     ln = "secLevel = " + secLevel;
-
+                else if (ln.trim().startsWith("filterProvider"))
+                    ln = "filterProvider = " + filter.getString("recursive");
                 out.write((ln + "\r\n").getBytes());
 
                 changed = changed || !old.equals(ln);
@@ -125,67 +121,6 @@ public class WebSocketConnector {
         } catch (Exception e) {
             Log.e(TAG, "persistConfig: " + e.getMessage());
         }
-    }
-
-    private boolean loadVpnProfile(JSONObject vpnServer, String dns) {
-        VpnServer currentServer;
-        try {
-            currentServer = new VpnServer(
-                    vpnServer.getString("hostName"),
-                    vpnServer.getString("ip"),
-                    String.valueOf(vpnServer.getLong("score")),
-                    String.valueOf(vpnServer.getInt("ping")),
-                    String.valueOf(vpnServer.getLong("speed")),
-                    vpnServer.getString("country"),
-                    vpnServer.getString("countryCode"),
-                    String.valueOf(vpnServer.getInt("numVpnSessions")),
-                    String.valueOf(vpnServer.getLong("uptime")),
-                    String.valueOf(vpnServer.getLong("totalUsers")),
-                    String.valueOf(vpnServer.getLong("totalTraffic")),
-                    vpnServer.getString("logType"),
-                    vpnServer.getString("operator"),
-                    vpnServer.getString("message"),
-                    vpnServer.getString("configData"),
-                    ConnectionQuality.getConnectionQuality(
-                            String.valueOf(vpnServer.getLong("speed")),
-                            String.valueOf(vpnServer.getInt("numVpnSessions")),
-                            String.valueOf(vpnServer.getInt("ping"))
-                    ),
-                    null,
-                    0,
-                    null,
-                    0,
-                    0
-            );
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
-        byte[] data;
-        try {
-            data = Base64.decode(currentServer.getConfigData(), Base64.DEFAULT);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        ConfigParser cp = new ConfigParser();
-        InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(data));
-        try {
-            cp.parseConfig(isr);
-            VpnProfile vpnProfile = cp.convertProfile();
-            vpnProfile.mName = currentServer.getCountryLong();
-            vpnProfile.mOverrideDNS = true;
-            vpnProfile.mDNS1 = dns;
-            vpnProfile.mDNS2 = dns;
-            ProfileManager.getInstance(context).addProfile(vpnProfile);
-            VPNLaunchHelper.startOpenVpn(vpnProfile, context);
-        } catch (IOException | ConfigParser.ConfigParseError e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
     }
 
     private Disposable subscribeToSecurityConfig() {

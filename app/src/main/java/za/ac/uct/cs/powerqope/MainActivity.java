@@ -190,20 +190,10 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     }
 
     private void requestPermissions() {
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                + ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                + ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                + ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                    Manifest.permission.READ_PHONE_STATE) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                            Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                            Manifest.permission.ACCESS_FINE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            ) {
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Please grant the following permissions");
                 builder.setMessage("Read phone state, Access Storage");
@@ -212,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ActivityCompat.requestPermissions(MainActivity.this,
                                 new String[]{
-                                        Manifest.permission.READ_PHONE_STATE,
                                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                                 },
                                 PERMISSIONS_REQUEST_CODE
@@ -225,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             } else {
                 ActivityCompat.requestPermissions(MainActivity.this,
                         new String[]{
-                                Manifest.permission.READ_PHONE_STATE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                         },
                         PERMISSIONS_REQUEST_CODE
@@ -376,7 +364,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             if (allPermissionsGranted) {
                 PhoneUtils.setGlobalContext(this.getApplicationContext());
                 PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
-                phoneUtils.registerSignalStrengthListener();
                 loadAndApplyConfig(true);
             }
         } else {

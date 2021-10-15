@@ -73,7 +73,7 @@ public class AdvancedActivity extends AppCompatActivity {
                 filterOptionsMap.get(option).add("Family");
             }
             else if(option.equalsIgnoreCase("adguard")){
-                filterOptionsMap.get(option).add("Unfiltered");
+                filterOptionsMap.get(option).add("Standard");
                 filterOptionsMap.get(option).add("Ads");
                 filterOptionsMap.get(option).add("Family");
             }
@@ -312,7 +312,8 @@ public class AdvancedActivity extends AppCompatActivity {
                     else if(selDNSType.equals(DNS_TYPES.DoT))
                         filter.put("dnsType", "dot");
                     else
-                        filter.put("dnsType", "do53");
+                        filter.put("dnsType", "dns");
+                    filter.put("recursive", selDNSProvider.toLowerCase()+"_"+selDNSFilter.toLowerCase());
                     // Provider
                     switch (selDNSProvider.toLowerCase()){
                         case "cloudflare":
@@ -351,13 +352,14 @@ public class AdvancedActivity extends AppCompatActivity {
                             break;
                         case "adguard":
                             switch (selDNSFilter.toLowerCase()){
-                                case "unfiltered":
+                                case "standard":
                                     filter.put("url", "https://dns-unfiltered.adguard.com/dns-query");
                                     filter.put("ipAddress", "94.140.14.140");
                                     break;
                                 case "ads":
                                     filter.put("url", "https://dns.adguard.com/dns-query");
                                     filter.put("ipAddress", "94.140.14.14");
+                                    filter.put("recursive", "adguard_adblock");
                                     break;
                                 case "family":
                                     filter.put("url", "https://dns-family.adguard.com/dns-query");
@@ -369,6 +371,7 @@ public class AdvancedActivity extends AppCompatActivity {
                         case "google":
                             filter.put("url", "https://dns.google/dns-query");
                             filter.put("ipAddress", "8.8.8.8");
+                            filter.put("recursive", "google_nofilter");
                             validationsDone = true;
                             break;
                         case "quad9":
@@ -416,6 +419,7 @@ public class AdvancedActivity extends AppCompatActivity {
                                 txtEditor.putString("editText", editText3.getText().toString());
                                 txtEditor.apply();
                             }
+                            filter.put("recursive", "custom_filter");
                             break;
                     }
                 } catch (JSONException e){

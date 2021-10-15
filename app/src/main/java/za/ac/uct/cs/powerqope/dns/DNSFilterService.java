@@ -64,6 +64,7 @@ import java.util.Vector;
 import za.ac.uct.cs.powerqope.AndroidEnvironment;
 import za.ac.uct.cs.powerqope.MainActivity;
 import za.ac.uct.cs.powerqope.R;
+import za.ac.uct.cs.powerqope.fragment.HomeFragment;
 import za.ac.uct.cs.powerqope.ip.IPPacket;
 import za.ac.uct.cs.powerqope.ip.UDPPacket;
 import za.ac.uct.cs.powerqope.util.ExecutionEnvironment;
@@ -725,10 +726,13 @@ public class DNSFilterService extends VpnService {
                 pause_resume.setAction("pause_resume");
                 PendingIntent pause_resume_Intent = PendingIntent.getBroadcast(this, 12345, pause_resume, PendingIntent.FLAG_UPDATE_CURRENT);
 
+                String level = DNSFILTER.getConfig().getProperty("secLevel", "default");
+                String serverInfo = HomeFragment.getServerInfo();
                 notibuilder
-                        .setContentTitle(getResources().getString(R.string.notificationActive))
+                        .setContentTitle(getResources().getString(R.string.notificationActive, level))
                         .setSmallIcon(R.drawable.icon)
                         .setContentIntent(pendingIntent)
+                        .setContentText(serverInfo)
                         //.setContentIntent(pause_resume_Intent)
                         .build();
 
@@ -748,20 +752,15 @@ public class DNSFilterService extends VpnService {
         return START_STICKY;
     }
 
-
-    public void pause_resume() throws IOException {
-        DNSFilterManager.getInstance().switchBlockingActive();
-        updateNotification();
-    }
-
     private void updateNotification() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
             return;
         try {
             String level = DNSFILTER.getConfig().getProperty("secLevel", "default");
             String txt = getResources().getString(R.string.notificationActive, level.toUpperCase(Locale.ROOT));
-
+            String content = HomeFragment.getServerInfo();
             notibuilder.setContentTitle(txt);
+            notibuilder.setContentText(content);
             notibuilder.setSmallIcon(R.drawable.icon);
 
             ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(1);
@@ -982,9 +981,9 @@ public class DNSFilterService extends VpnService {
         if (!dnsProxyMode || vpnInAdditionToProxyMode) {
             restartVPN(true);
         }
-        updateNotification();
         MainActivity.reloadLocalConfig();
         possibleNetworkChange(true); // trigger dns detection
+        updateNotification();
     }
 
     public static void onReload() throws IOException {

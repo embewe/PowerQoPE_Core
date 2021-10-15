@@ -45,6 +45,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 
@@ -55,6 +56,7 @@ public class HomeFragment extends Fragment {
 
 
     private static final String TAG = "HomeFragment";
+    private static ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
 
     public HomeFragment() {
         // Required empty public constructor
@@ -68,8 +70,6 @@ public class HomeFragment extends Fragment {
     String MY_PREFS_NAME = "preferences";
 
     String selectedConfig;
-
-    ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -146,7 +146,6 @@ public class HomeFragment extends Fragment {
                         editor.putBoolean("connect", true);
                         editor.apply();
                     } else {
-                        selectedConfig = "default";
                         restoreDefaults();
                         Toast.makeText(getActivity(), "Disconnected", Toast.LENGTH_SHORT).show();
                         connected.setBackgroundColor(Color.parseColor("#292B2B"));
@@ -283,6 +282,9 @@ public class HomeFragment extends Fragment {
                 else if (ln.trim().startsWith("secLevel"))
                     ln = "secLevel = default";
 
+                else if (ln.trim().startsWith("filterProvider"))
+                    ln = "filterProvider = no_filter";
+
                 out.write((ln + "\r\n").getBytes());
             }
 
@@ -297,7 +299,21 @@ public class HomeFragment extends Fragment {
     }
 
     public static void setServerInfo(String info){
-        serverInfo.setText("Connected to : " + info);
+        try {
+            if(!info.isEmpty()) {
+                String[] components = info.split("::");
+                String address = components[0].substring(1, components[0].length() - 1);
+                String protocol = components[2];
+                String provider = CONFIG.getConfig().getProperty("filterProvider", "no_filter");
+                serverInfo.setText(String.format("DNS : %s, %s, %s", address, provider, protocol));
+            }
+        } catch (IOException e){
+            Log.e(TAG, "setServerInfo: Unable to read local config\n"+e);
+        }
+    }
+
+    public static String getServerInfo(){
+        return serverInfo.getText().toString();
     }
 
 }

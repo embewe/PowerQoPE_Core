@@ -91,6 +91,7 @@ public class PhoneUtils {
      * Returned by {@link #getNetwork()}.
      */
     public static final String NETWORK_WIFI = "Wifi";
+    public static final String NETWORK_METERED = "Metered";
     /**
      * IP type
      */
@@ -193,6 +194,7 @@ public class PhoneUtils {
     protected PhoneUtils(Context context) {
         this.context = context;
         powerBroadcastReceiver = new PowerStateChangeReceiver();
+        initNetwork();
         // Registers a receiver for battery change events.
         if (globalContext != null) {
             Intent powerIntent = globalContext.registerReceiver(powerBroadcastReceiver,
@@ -353,16 +355,6 @@ public class PhoneUtils {
     }
 
     /**
-     * This method must be called in the service thread, as the system will create a Looper in
-     * the calling thread which will handle the callbacks.
-     */
-    public void registerSignalStrengthListener() {
-        initNetwork();
-        telephonyManager.listen(new SignalStrengthChangeListener(),
-                PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
-    }
-
-    /**
      * Returns the network that the phone is on (e.g. Wifi, Edge, GPRS, etc).
      */
     public String getNetwork() {
@@ -373,44 +365,8 @@ public class PhoneUtils {
                 networkInfo.getState() == NetworkInfo.State.CONNECTED) {
             return NETWORK_WIFI;
         } else {
-            return getTelephonyNetworkType();
+            return NETWORK_METERED;
         }
-    }
-
-    private static final String[] NETWORK_TYPES = {
-            "UNKNOWN",  // 0  - NETWORK_TYPE_UNKNOWN
-            "GPRS",     // 1  - NETWORK_TYPE_GPRS
-            "EDGE",     // 2  - NETWORK_TYPE_EDGE
-            "UMTS",     // 3  - NETWORK_TYPE_UMTS
-            "CDMA",     // 4  - NETWORK_TYPE_CDMA
-            "EVDO_0",   // 5  - NETWORK_TYPE_EVDO_0
-            "EVDO_A",   // 6  - NETWORK_TYPE_EVDO_A
-            "1xRTT",    // 7  - NETWORK_TYPE_1xRTT
-            "HSDPA",    // 8  - NETWORK_TYPE_HSDPA
-            "HSUPA",    // 9  - NETWORK_TYPE_HSUPA
-            "HSPA",     // 10 - NETWORK_TYPE_HSPA
-            "IDEN",     // 11 - NETWORK_TYPE_IDEN
-            "EVDO_B",   // 12 - NETWORK_TYPE_EVDO_B
-            "LTE",      // 13 - NETWORK_TYPE_LTE
-            "EHRPD",    // 14 - NETWORK_TYPE_EHRPD
-    };
-
-    /**
-     * Returns mobile data network connection type.
-     */
-    private String getTelephonyNetworkType() {
-        assert NETWORK_TYPES[14].compareTo("EHRPD") == 0;
-
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            int networkType = telephonyManager.getNetworkType();
-            if (networkType < NETWORK_TYPES.length) {
-                // Network type might get changed if getNetwokrType() called twice
-                return NETWORK_TYPES[networkType];
-            } else {
-                return "Unrecognized: " + networkType;
-            }
-        }
-        return null;
     }
 
     /**
@@ -446,59 +402,6 @@ public class PhoneUtils {
             return wifiInfo.getSSID();
         }
         return null;
-    }
-
-    /**
-     * Returns the information about cell towers in range. Returns null if the information is
-     * not available
-     * <p>
-     * TODO(wenjiezeng): As folklore has it and Wenjie has confirmed, we cannot get cell info from
-     * Samsung phones.
-     */
-    @SuppressLint("MissingPermission")
-    public String getCellInfo(boolean cidOnly) {
-        initNetwork();
-        List<CellInfo> infos = null;
-        if (ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            infos = telephonyManager.getAllCellInfo();
-
-        StringBuffer buf = new StringBuffer();
-        String tempResult = "";
-        int cid = 0, lac = 0, rssi = 0;
-        if (infos != null && infos.size() > 0) {
-            for (CellInfo info : infos) {
-                if (info instanceof CellInfoGsm) {
-                    CellInfoGsm cellInfoGsm = (CellInfoGsm) info;
-                    cid = cellInfoGsm.getCellIdentity().getCid();
-                    lac = cellInfoGsm.getCellIdentity().getLac();
-                    rssi = cellInfoGsm.getCellSignalStrength().getDbm();
-                } else if (info instanceof CellInfoLte) {
-                    CellInfoLte cellInfoLte = (CellInfoLte) info;
-                    cid = cellInfoLte.getCellIdentity().getCi();
-                    lac = cellInfoLte.getCellIdentity().getTac();
-                    rssi = cellInfoLte.getCellSignalStrength().getDbm();
-                } else if (info instanceof CellInfoWcdma) {
-                    CellInfoWcdma cellInfoLte = (CellInfoWcdma) info;
-                    cid = cellInfoLte.getCellIdentity().getCid();
-                    lac = cellInfoLte.getCellIdentity().getLac();
-                    rssi = cellInfoLte.getCellSignalStrength().getDbm();
-                } else if (info instanceof CellInfoCdma) {
-                    CellInfoCdma cellInfoCdma = (CellInfoCdma) info;
-                    cid = cellInfoCdma.getCellIdentity().getBasestationId();
-                    lac = cellInfoCdma.getCellIdentity().getNetworkId();
-                    rssi = cellInfoCdma.getCellSignalStrength().getDbm();
-                }
-                tempResult = cidOnly ? cid + ";" : lac + ","
-                        + cid + "," + rssi + ";";
-                buf.append(tempResult);
-            }
-            // Removes the trailing semicolon
-            buf.deleteCharAt(buf.length() - 1);
-            return buf.toString();
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -761,37 +664,6 @@ public class PhoneUtils {
     }
 
     /**
-     * Sets the current RSSI value
-     */
-    public synchronized void setCurrentRssi(int rssi) {
-        currentSignalStrength = rssi;
-    }
-
-    /**
-     * Returns the last updated RSSI value
-     */
-    public synchronized int getCurrentRssi() {
-        initNetwork();
-        return currentSignalStrength;
-    }
-
-    private class SignalStrengthChangeListener extends PhoneStateListener {
-        @Override
-        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-            String network = getNetwork();
-            if (network.equals(NETWORK_TYPES[TelephonyManager.NETWORK_TYPE_CDMA])) {
-                setCurrentRssi(signalStrength.getCdmaDbm());
-            } else if (network.equals(NETWORK_TYPES[TelephonyManager.NETWORK_TYPE_EVDO_0]) ||
-                    network.equals(NETWORK_TYPES[TelephonyManager.NETWORK_TYPE_EVDO_A]) ||
-                    network.equals(NETWORK_TYPES[TelephonyManager.NETWORK_TYPE_EVDO_B])) {
-                setCurrentRssi(signalStrength.getEvdoDbm());
-            } else if (signalStrength.isGsm()) {
-                setCurrentRssi(signalStrength.getGsmSignalStrength());
-            }
-        }
-    }
-
-    /**
      * Fetches the new connectivity state from the connectivity manager directly.
      */
     private synchronized void updateConnectivityInfo() {
@@ -855,25 +727,11 @@ public class PhoneUtils {
                 Build.VERSION.RELEASE, Build.VERSION.SDK_INT);
     }
 
-    @SuppressLint("MissingPermission")
-    public String getDeviceId() {
-        String deviceId = null;
-        if (ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
-            deviceId = telephonyManager.getDeviceId();  // This ID is permanent to a physical phone.
-        // "generic" means the emulator.
-        if (deviceId == null || Build.DEVICE.equals("generic")) {
-            // This ID changes on OS reinstall/factory reset.
-            deviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-        }
-        return deviceId;
-    }
-
 
     public DeviceInfo getDeviceInfo() {
         if (deviceInfo == null) {
             deviceInfo = new DeviceInfo();
-            deviceInfo.deviceId = getDeviceId();
+            deviceInfo.deviceId = WebSocketConnector.getInstance().getDeviceId();
             deviceInfo.manufacturer = Build.MANUFACTURER;
             deviceInfo.model = Build.MODEL;
             deviceInfo.os = getVersionStr();
@@ -1036,57 +894,5 @@ public class PhoneUtils {
         ipAddr[2] = (ip >> 16) & 0xFF;
         ipAddr[3] = (ip >> 24) & 0xFF;
         return String.format("%s.%s.%s.%s", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
-    }
-
-    @SuppressLint("HardwareIds")
-    public JSONObject getAccessPointInfo(){
-        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService (Context.WIFI_SERVICE);
-        WifiInfo info = wifiManager.getConnectionInfo ();
-        JSONObject accessPointInfo = new JSONObject();
-        try {
-            accessPointInfo.put("deviceId", getDeviceInfo().deviceId);
-            accessPointInfo.put("BSSID", info.getBSSID());
-            accessPointInfo.put("SSID", info.getSSID());
-            accessPointInfo.put("frequency", info.getFrequency());
-            accessPointInfo.put("ipAddress", convertIpAddress(info.getIpAddress()));
-            accessPointInfo.put("linkSpeed", info.getLinkSpeed());
-            accessPointInfo.put("macAddress", info.getMacAddress());
-            accessPointInfo.put("rssi", info.getRssi());
-            accessPointInfo.put("timestamp", System.currentTimeMillis() * 1000);
-        } catch (JSONException e) {
-            Logger.e("Error occurred while generating access point payload");
-        }
-        return accessPointInfo;
-    }
-
-    /**
-     * Returns the DeviceProperty needed to report the measurement result
-     */
-    public DeviceProperty getDeviceProperty() {
-        String carrierName = telephonyManager.getNetworkOperatorName();
-        Location location;
-        if (isTestingServer(getServerUrl())) {
-            location = getMockLocation();
-        } else {
-            location = getLocation();
-        }
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        String networkType = PhoneUtils.getPhoneUtils().getNetwork();
-        String ipConnectivity = getIpConnectivity();
-        String dnResolvability = getDnResolvability();
-        Logger.w("IP connectivity is " + ipConnectivity);
-        Logger.w("DN resolvability is " + dnResolvability);
-        if (activeNetwork != null) {
-            networkType = activeNetwork.getTypeName();
-        }
-        String versionName = PhoneUtils.getPhoneUtils().getAppVersionName();
-        PhoneUtils utils = PhoneUtils.getPhoneUtils();
-
-        return new DeviceProperty(getDeviceInfo().deviceId, versionName,
-                System.currentTimeMillis() * 1000, getVersionStr(), ipConnectivity,
-                dnResolvability, location.getLongitude(), location.getLatitude(),
-                location.getProvider(), networkType, carrierName,
-                utils.getCurrentBatteryLevel(), utils.isCharging(),
-                utils.getCellInfo(false), utils.getCurrentRssi());
     }
 }
