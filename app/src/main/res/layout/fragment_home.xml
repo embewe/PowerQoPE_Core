@@ -148,7 +148,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_horizontal"
-                    android:text="VPN Permission required"
+                    android:text="Using default DNS servers"
                     android:textSize="18sp"
                     android:textColor="#ffffff" />
 

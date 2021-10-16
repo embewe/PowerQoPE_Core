@@ -13,10 +13,8 @@ import android.net.VpnService;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -31,10 +29,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import za.ac.uct.cs.powerqope.AdvancedActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.yarolegovich.slidingrootnav.SlidingRootNav;
+import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.Security;
+import java.util.Arrays;
+import java.util.Properties;
+
 import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
 import za.ac.uct.cs.powerqope.dns.DNSFilterService;
 import za.ac.uct.cs.powerqope.fragment.HTTPTestFragment;
@@ -47,18 +54,7 @@ import za.ac.uct.cs.powerqope.menu.DrawerAdapter;
 import za.ac.uct.cs.powerqope.menu.DrawerItem;
 import za.ac.uct.cs.powerqope.menu.SimpleItem;
 import za.ac.uct.cs.powerqope.util.PhoneUtils;
-import za.ac.uct.cs.powerqope.util.Util;
 import za.ac.uct.cs.powerqope.util.WebSocketConnector;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.yarolegovich.slidingrootnav.SlidingRootNav;
-import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.Security;
-import java.util.Arrays;
-import java.util.Properties;
 
 
 public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener {
@@ -229,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
         }
         if (position == POS_HOME) {
             slidingRootNav.closeMenu();
-            Intent intent = new Intent(getApplicationContext(), getClass());
             Fragment selectedScreen = new HomeFragment();
             showFragment(selectedScreen);
         }

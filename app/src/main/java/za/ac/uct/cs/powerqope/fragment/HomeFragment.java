@@ -5,35 +5,27 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.subjects.BehaviorSubject;
 import za.ac.uct.cs.powerqope.AdvancedActivity;
 import za.ac.uct.cs.powerqope.Config;
 import za.ac.uct.cs.powerqope.R;
 import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
+import za.ac.uct.cs.powerqope.dns.DNSCommunicator;
 import za.ac.uct.cs.powerqope.util.PhoneUtils;
+import za.ac.uct.cs.powerqope.util.Util;
 import za.ac.uct.cs.powerqope.util.WebSocketConnector;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +46,6 @@ import java.io.InputStreamReader;
  */
 public class HomeFragment extends Fragment {
 
-
     private static final String TAG = "HomeFragment";
     private static ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
 
@@ -65,7 +56,7 @@ public class HomeFragment extends Fragment {
     LinearLayout connected;
     SwitchCompat switchCompat;
     RadioButton radioButton, radioButton1, radioButton2, radioButton3;
-    static TextView serverInfo;
+    static TextView serverInfoTxt;
 
     String MY_PREFS_NAME = "preferences";
 
@@ -75,6 +66,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         switchCompat = v.findViewById(R.id.switch1);
@@ -83,7 +75,9 @@ public class HomeFragment extends Fragment {
         radioButton1 = v.findViewById(R.id.radioButton1);
         radioButton2 = v.findViewById(R.id.radioButton2);
         radioButton3 = v.findViewById(R.id.radioButton3);
-        serverInfo = v.findViewById(R.id.measurements);
+        serverInfoTxt = v.findViewById(R.id.measurements);
+
+        setServerInfoTxt(DNSCommunicator.getInstance().getLastDNSAddress());
 
         SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         switchCompat.setChecked(prefs.getBoolean("connect", false));
@@ -298,22 +292,30 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public static void setServerInfo(String info){
+    public static void setServerInfoTxt(String info){
         try {
             if(!info.isEmpty()) {
                 String[] components = info.split("::");
-                String address = components[0].substring(1, components[0].length() - 1);
                 String protocol = components[2];
-                String provider = CONFIG.getConfig().getProperty("filterProvider", "no_filter");
-                serverInfo.setText(String.format("DNS : %s, %s, %s", address, provider, protocol));
+                String filterInfo = CONFIG.getConfig().getProperty("filterProvider", "no_filter");
+                String provider = "System default";
+                String webFilter = "None";
+                if(filterInfo.equalsIgnoreCase("google"))
+                    provider = Util.capitalize(filterInfo);
+                else if(!filterInfo.equalsIgnoreCase("no_filter")){
+                    String[] fInfo = filterInfo.split("_");
+                    provider = Util.capitalize(fInfo[0]);
+                    webFilter = Util.capitalize(fInfo[1]) + " filter";
+                }
+                serverInfoTxt.setText(String.format("DNS provider: %s\nWeb Filter: %s\nProtocol: %s", provider, webFilter, protocol));
             }
         } catch (IOException e){
             Log.e(TAG, "setServerInfo: Unable to read local config\n"+e);
         }
     }
 
-    public static String getServerInfo(){
-        return serverInfo.getText().toString();
+    public static String getServerInfoTxt(){
+        return serverInfoTxt.getText().toString();
     }
 
 }

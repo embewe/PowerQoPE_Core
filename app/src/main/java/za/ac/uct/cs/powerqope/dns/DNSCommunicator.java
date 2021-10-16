@@ -21,11 +21,9 @@
  */
 package za.ac.uct.cs.powerqope.dns;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,7 +31,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.util.Date;
 
-import za.ac.uct.cs.powerqope.MainActivity;
 import za.ac.uct.cs.powerqope.fragment.HomeFragment;
 import za.ac.uct.cs.powerqope.util.ExecutionEnvironment;
 import za.ac.uct.cs.powerqope.util.Util;
@@ -45,7 +42,7 @@ public class DNSCommunicator {
 
 	public DNSCommunicator() {
 		dnsServerListener.setValue("");
-		dnsServerListener.observeForever(s -> HomeFragment.setServerInfo(s));
+		dnsServerListener.observeForever(s -> HomeFragment.setServerInfoTxt(s));
 	}
 
 	private static int TIMEOUT = 12000;

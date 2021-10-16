@@ -371,7 +371,7 @@ public class AdvancedActivity extends AppCompatActivity {
                         case "google":
                             filter.put("url", "https://dns.google/dns-query");
                             filter.put("ipAddress", "8.8.8.8");
-                            filter.put("recursive", "google_nofilter");
+                            filter.put("recursive", "google");
                             validationsDone = true;
                             break;
                         case "quad9":

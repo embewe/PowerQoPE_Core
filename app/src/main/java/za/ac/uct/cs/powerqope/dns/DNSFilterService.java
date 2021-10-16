@@ -727,12 +727,12 @@ public class DNSFilterService extends VpnService {
                 PendingIntent pause_resume_Intent = PendingIntent.getBroadcast(this, 12345, pause_resume, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 String level = DNSFILTER.getConfig().getProperty("secLevel", "default");
-                String serverInfo = HomeFragment.getServerInfo();
+                String serverInfo = HomeFragment.getServerInfoTxt();
                 notibuilder
                         .setContentTitle(getResources().getString(R.string.notificationActive, level))
                         .setSmallIcon(R.drawable.icon)
                         .setContentIntent(pendingIntent)
-                        .setContentText(serverInfo)
+                        .setStyle(new Notification.BigTextStyle().bigText(serverInfo))
                         //.setContentIntent(pause_resume_Intent)
                         .build();
 
@@ -758,10 +758,10 @@ public class DNSFilterService extends VpnService {
         try {
             String level = DNSFILTER.getConfig().getProperty("secLevel", "default");
             String txt = getResources().getString(R.string.notificationActive, level.toUpperCase(Locale.ROOT));
-            String content = HomeFragment.getServerInfo();
+            String content = HomeFragment.getServerInfoTxt();
             notibuilder.setContentTitle(txt);
-            notibuilder.setContentText(content);
             notibuilder.setSmallIcon(R.drawable.icon);
+            notibuilder.setStyle(new Notification.BigTextStyle().bigText(content));
 
             ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(1);
             ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).notify(1, notibuilder.build());
