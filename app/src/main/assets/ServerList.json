@@ -1,7 +1,7 @@
 [
   {
     "name":"Malawi, Lilongwe",
-    "server":"//lab.enockmbewe.com:8081",
+    "server":"//speedtest.enockmbewe.com",
     "dlURL":"garbage.php",
     "ulURL":"empty.php",
     "pingURL":"empty.php",
