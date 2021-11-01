@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="10dp"
+    android:background="#292B2B"
+    android:orientation="vertical"
+    app:cardElevation="15dp">
+
+    <LinearLayout
+        android:id="@+id/bcchange"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#292B2B"
+        android:weightSum="1">
+
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="1">
+
+          <!--  <TextView
+                android:id="@+id/slNo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="1"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="18sp" />-->
+
+            <TextView
+                android:id="@+id/dateSpeedmeter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="11/05/2019"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/buffer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="55.6"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/loadtime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="64.56"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/bandwidth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="64.56"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/textColorSecondary"/>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

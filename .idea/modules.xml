@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/PowerQoPE.iml" filepath="$PROJECT_DIR$/.idea/modules/PowerQoPE.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.iml" filepath="$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.iml" />
     </modules>
   </component>
 </project>

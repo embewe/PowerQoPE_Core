@@ -5,7 +5,7 @@
       <configuration>
         <option name="GRADLE_PROJECT_PATH" value=":GaugeView" />
         <option name="LAST_SUCCESSFUL_SYNC_AGP_VERSION" value="3.5.3" />
-        <option name="LAST_KNOWN_AGP_VERSION" value="7.0.0" />
+        <option name="LAST_KNOWN_AGP_VERSION" value="3.5.3" />
       </configuration>
     </facet>
     <facet type="android" name="Android">
@@ -26,7 +26,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
     <output url="file://$MODULE_DIR$/../../../../library/GaugeView/build/intermediates/javac/debug/classes" />
     <output-test url="file://$MODULE_DIR$/../../../../library/GaugeView/build/intermediates/javac/debugUnitTest/classes" />
     <exclude-output />
@@ -38,6 +38,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../../../../library/GaugeView/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/../../../../library/GaugeView/src/main/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/../../../../library/GaugeView/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../../library/GaugeView/build/generated/source/buildConfig/androidTest/debug" isTestSource="true" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/../../../../library/GaugeView/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../../library/GaugeView/build" />
     </content>

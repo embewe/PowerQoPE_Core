@@ -2,13 +2,84 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragment.VideoSpeedReportsFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:background="#333333"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="1">
 
+            <TextView
+                android:id="@+id/dateSpeedmeter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="Date"
+                android:textStyle="bold"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="18sp" />
+
+
+            <TextView
+                android:id="@+id/loadtime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="VLT"
+                android:textStyle="bold"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/buffer"
+                android:layout_width="58dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="Buff%"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/bandwidth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:padding="7dp"
+                android:text="BW"
+                android:textStyle="bold"
+                android:textColor="@color/textColorSecondary"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/white"/>
+        <ListView
+            android:id="@+id/listViewEmployees"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/adView"
+            android:layout_marginBottom="50dp"
+            />
+
+    </LinearLayout>
 </FrameLayout>
