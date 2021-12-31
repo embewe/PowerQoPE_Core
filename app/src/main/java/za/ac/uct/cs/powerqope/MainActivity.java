@@ -20,6 +20,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.ColorInt;
@@ -47,7 +49,6 @@ import java.util.Properties;
 import de.blinkt.openvpn.VpnProfile;
 import de.blinkt.openvpn.core.OpenVPNService;
 import de.blinkt.openvpn.core.VPNLaunchHelper;
-import za.ac.uct.cs.powerqope.activity.PrefManager;
 import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
 import za.ac.uct.cs.powerqope.dns.DNSFilterService;
 import za.ac.uct.cs.powerqope.fragment.HTTPTestFragment;
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     private String target;
     private boolean remoteVpnEnabled = false;
     private boolean isBoundRemoteVpnService = false;
-    private PrefManager prefManager;
+
     protected static Properties config = null;
     protected static boolean switchingConfig = false;
     private static VpnProfile remoteVpnProfile;
@@ -96,9 +97,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     @Override
     protected void onStart() {
         requestPermissions();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED)
-            initPhone();
         bindToRemoteVpnService();
         super.onStart();
     }
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 }
             });
 
-    private final ServiceConnection vpnConnection = new ServiceConnection() {
+    private ServiceConnection vpnConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             OpenVPNService.LocalBinder binder = (OpenVPNService.LocalBinder) service;
@@ -281,14 +279,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             Fragment selectedScreen = new SpeedCheckerFragment();
             showFragment(selectedScreen);
         }
-        if (position == POS_HELP){
-            prefManager=new PrefManager(getApplicationContext());
-            prefManager.setFirstTimeLaunch(true);
-            slidingRootNav.closeMenu();
-            Fragment selectedScreen = new HomeFragment();
-            showFragment(selectedScreen);
-
-        }
 
         if (position !=POS_SPEED_CHECKER ){
             bottomNavigationView.setVisibility(View.GONE);
@@ -408,7 +398,8 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                     allPermissionsGranted = false;
             }
             if (allPermissionsGranted) {
-                initPhone();
+                PhoneUtils.setGlobalContext(this.getApplicationContext());
+                PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
                 loadAndApplyConfig(true);
             }
         } else {
@@ -444,7 +435,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             editor.putString(Config.PREF_KEY_RESOLVED_DNS_PROXY, mSplit[1]);
             editor.apply();
             WebSocketConnector webSocketConnector = WebSocketConnector.getInstance();
-            WebSocketConnector.setContext(getApplicationContext());
+            WebSocketConnector.setContext(getBaseContext());
             if (!webSocketConnector.isConnected())
                 webSocketConnector.connectWebSocket(target);
         }
@@ -455,13 +446,5 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
         intent.setAction(OpenVPNService.START_SERVICE);
         isBoundRemoteVpnService = bindService(intent, vpnConnection, Context.BIND_AUTO_CREATE);
     }
-
-    private PhoneUtils initPhone(){
-        PhoneUtils.setGlobalContext(this.getApplicationContext());
-        PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
-
-        return phoneUtils;
-    }
-
 }
 

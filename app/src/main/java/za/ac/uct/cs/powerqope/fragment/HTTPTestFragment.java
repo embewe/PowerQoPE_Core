@@ -1,46 +1,15 @@
 package za.ac.uct.cs.powerqope.fragment;
 
 
-import static java.lang.Integer.parseInt;
-
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.icu.util.Measure;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import za.ac.uct.cs.powerqope.Config;
 import za.ac.uct.cs.powerqope.MeasurementError;
@@ -54,6 +23,44 @@ import za.ac.uct.cs.powerqope.util.MeasurementJsonConvertor;
 import za.ac.uct.cs.powerqope.util.Util;
 import za.ac.uct.cs.powerqope.util.WebSocketConnector;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.util.Xml;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -62,69 +69,22 @@ public class HTTPTestFragment extends Fragment {
     private static final String TAG = "HTTPTestFragment";
 
     public HTTPTestFragment() {
-
+        // Required empty public constructor
     }
 
     Spinner dropdown;
-    private ProgressDialog progress;
+    private ProgressDialog progDailog;
     TextView httpResults;
     Handler handler;
     LinearLayout buttonView;
     double serverRtt, resolverRtt;
     String cipherLevel;
     String vpnServer;
-    Button start;
-    //public String[] links = {"https://google.com","https://facebook.com"};
-
-
-    private static final ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_httptest, container, false);
-
-        List<String> listOfStrings = new ArrayList<String>();
-        try {
-            //FileReader fr = new FileReader("sites.txt");
-            //listOfStrings = Files.readAllLines(Paths.get("sites"));
-            BufferedReader bf = new BufferedReader(
-                    new InputStreamReader(getActivity().getAssets().open("sites.txt")));
-            String line = bf.readLine();
-
-            // checking for end of file
-            while (line != null) {
-                listOfStrings.add(line);
-                line = bf.readLine();
-            }
-
-            // closing bufferreader object
-            bf.close();
-        } catch (IOException e) {
-            Toast toast = Toast.makeText(getActivity(), "File: not found!", Toast.LENGTH_LONG);
-            toast.show();
-        }
-
-
-        String[] links = listOfStrings.toArray(new String[0]);
-
-
-        start = v.findViewById(R.id.buttonStart);
-
-        start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                for (int i = 0; i < links.length; i++) {
-
-                        new ExecutePageLoad().execute(links[i]);
-
-                    }
-
-
-            }
-
-        });
         SharedPreferences prefs = getActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE);
         try {
             String secLevel = CONFIG.getConfig().getProperty("secLevel", "advanced");
@@ -136,40 +96,33 @@ public class HTTPTestFragment extends Fragment {
         } catch (IOException e){
             Log.e(TAG, "onCreateView: "+e);
         }
-
-
-
-
-
-
         vpnServer = prefs.getString("selVpnHost", null);
         handler = new Handler(Looper.getMainLooper());
+        buttonView = v.findViewById(R.id.button_start);
         httpResults = v.findViewById(R.id.txtHttpResult);
-        //final EditText editText = v.findViewById(R.id.editText2);
-        //dropdown = v.findViewById(R.id.sites);
+        final EditText editText = v.findViewById(R.id.editText2);
+        dropdown = v.findViewById(R.id.sites);
         String[] advancedOptions = getResources().getStringArray(R.array.webSites);
-        //ArrayAdapter adapter = new ArrayAdapter(getActivity(),
-        //        R.layout.spinner_item2, advancedOptions);
-        //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        /*editText.setVisibility(View.GONE);
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(),
+                R.layout.spinner_item2, advancedOptions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        editText.setVisibility(View.GONE);
         dropdown.setAdapter(adapter);
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                //for (i = 0; i < 3; i++) {
-
-                    if (dropdown.getSelectedItemPosition() == 16) {
-                        editText.setVisibility(View.VISIBLE);
-                    } else if (dropdown.getSelectedItemPosition() == 0) {
-                        editText.setVisibility(View.GONE);
-                        httpResults.setVisibility(View.GONE);
-                        buttonView.setVisibility(View.VISIBLE);
-                    } else if (dropdown.getSelectedItemPosition() != 16 && dropdown.getSelectedItemPosition() != 0) {
-                        String defaultLink = dropdown.getSelectedItem().toString();
-                        editText.setVisibility(View.GONE);
-                        progDailog = ProgressDialog.show(getContext(), "Loading", "Please wait...", true);
-                        progDailog.setCancelable(false);
-                        new ExecutePageLoad().execute(defaultLink);
+                if (dropdown.getSelectedItemPosition() == 16) {
+                    editText.setVisibility(View.VISIBLE);
+                } else if (dropdown.getSelectedItemPosition() == 0) {
+                    editText.setVisibility(View.GONE);
+                    httpResults.setVisibility(View.GONE);
+                    buttonView.setVisibility(View.VISIBLE);
+                } else if (dropdown.getSelectedItemPosition() != 16 && dropdown.getSelectedItemPosition() != 0) {
+                    String defaultLink = dropdown.getSelectedItem().toString();
+                    editText.setVisibility(View.GONE);
+                    progDailog = ProgressDialog.show(getContext(), "Loading", "Please wait...", true);
+                    progDailog.setCancelable(false);
+                    new ExecutePageLoad().execute(defaultLink);
 //                    browser.setWebViewClient(new MyBrowser() {
 //                        @Override
 //                        public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -186,9 +139,8 @@ public class HTTPTestFragment extends Fragment {
 //                            progDailog.dismiss();
 //                        }
 //                    });
-                    }
                 }
-
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -212,7 +164,7 @@ public class HTTPTestFragment extends Fragment {
                 return false;
             }
         });
-        button.setOnClickListener(new View.OnClickListener() {
+      /*  button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String link = editText.getText().toString();
@@ -283,72 +235,9 @@ public class HTTPTestFragment extends Fragment {
     class ExecutePageLoad extends AsyncTask<String, Void, MeasurementResult> {
 
         private String url;
-        int position = 0;
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        protected MeasurementResult doInBackground(String... urls ) {
+        protected MeasurementResult doInBackground(String... urls) {
             try {
-                /*getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        progDailog = ProgressDialog.show(getContext(), "Testing " + url, "Please wait...", true);
-                        progDailog.setCancelable(false);
-                    }
-                });*/
-                List<String> listOfStrings = new ArrayList<String>();
-                try {
-                    //FileReader fr = new FileReader("sites.txt");
-                    //listOfStrings = Files.readAllLines(Paths.get("sites"));
-                    BufferedReader bf = new BufferedReader(
-                            new InputStreamReader(getActivity().getAssets().open("sites.txt")));
-                    String line = bf.readLine();
-
-                    // checking for end of file
-                    while (line != null) {
-                        listOfStrings.add(line);
-                        line = bf.readLine();
-                    }
-
-                    // closing bufferreader object
-                    bf.close();
-                } catch (IOException e) {
-                    Toast toast = Toast.makeText(getActivity(), "File: not found!", Toast.LENGTH_LONG);
-                    toast.show();
-                }
-
-
-
-                String[] link = listOfStrings.toArray(new String[0]);
-
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        position = Arrays.asList(link).indexOf(url);
-                        progress = new ProgressDialog(getActivity());
-                        progress.setMessage("Testing " + url);
-                        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                        progress.setIndeterminate(false);
-                        progress.setProgress(0);
-                        progress.show();
-                        progress.setProgress(((position) * 100)/(link.length-1));
-                        progress.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-
-                                new AlertDialog.Builder(getContext())
-                                        .setTitle("Really Exit?")
-                                        .setMessage("Are you sure you want to exit?")
-                                        .setNegativeButton(android.R.string.no, null)
-                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                                            public void onClick(DialogInterface arg0, int arg1) {
-                                                progress.dismiss();
-                                            }
-                                        }).create().show();
-
-
-                            }
-                        });
-                    }});
-
                 PingTest pingTest = new PingTest();
                 url = urls[0];
                 try {
@@ -363,6 +252,7 @@ public class HTTPTestFragment extends Fragment {
                 } catch (MalformedURLException e){
                     Log.e(TAG,"Invalid URL : "+url);
                 }
+                progDailog.show();
                 Map<String, String> params = new HashMap<>();
                 params.put("url", url);
                 params.put("method", "get");
@@ -376,16 +266,14 @@ public class HTTPTestFragment extends Fragment {
                 HttpTask httpTask = new HttpTask(desc, getActivity().getApplicationContext());
                 return httpTask.call();
             } catch (MeasurementError e) {
-
-
                 Log.e(TAG, "doInBackground: "+e);
                 return null;
             }
         }
 
         protected void onPostExecute(MeasurementResult result) {
-            start.setVisibility(View.GONE);
-            //progDailog.dismiss();
+            buttonView.setVisibility(View.GONE);
+            progDailog.dismiss();
             if(result != null) {
                 Map<String, String> values = result.getValues();
                 double dnsTime, sslTime, tcpTime, pageLoadTime;
@@ -419,7 +307,7 @@ public class HTTPTestFragment extends Fragment {
                 String resultJsonString = MeasurementJsonConvertor.toJsonString(result);
                 WebSocketConnector.getInstance().sendMessage(Config.STOMP_SERVER_JOB_RESULT_ENDPOINT, resultJsonString);
             } else{
-                Toast.makeText(getActivity().getApplicationContext(), "Connection failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Could not connect!", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -440,7 +328,7 @@ public class HTTPTestFragment extends Fragment {
                     Log.i(TAG, inputLine);
                     String[] extractedValues = Util.extractInfoFromPingOutput(inputLine);
                     if (extractedValues != null) {
-                        int curIcmpSeq = parseInt(extractedValues[0]);
+                        int curIcmpSeq = Integer.parseInt(extractedValues[0]);
                         double rrtVal = Double.parseDouble(extractedValues[1]);
                         // ICMP responses from the system ping command could be duplicate and out of order
                         if (!receivedIcmpSeq.contains(curIcmpSeq)) {
@@ -457,16 +345,5 @@ public class HTTPTestFragment extends Fragment {
             return -1.0;
         }
     }
-    public void onBackPressed() {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Really Exit?")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                }).create().show();
-    }
 }

@@ -882,4 +882,32 @@ public class PhoneUtils {
         ipAddr[3] = (ip >> 24) & 0xFF;
         return String.format("%s.%s.%s.%s", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
     }
+
+    public DeviceProperty getDeviceProperty() {
+        String carrierName = telephonyManager.getNetworkOperatorName();
+        Location location;
+        if (isTestingServer(getServerUrl())) {
+            location = getMockLocation();
+        } else {
+            location = getLocation();
+        }
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        String networkType = PhoneUtils.getPhoneUtils().getNetwork();
+        String ipConnectivity = getIpConnectivity();
+        String dnResolvability = getDnResolvability();
+        Logger.w("IP connectivity is " + ipConnectivity);
+        Logger.w("DN resolvability is " + dnResolvability);
+        if (activeNetwork != null) {
+            networkType = activeNetwork.getTypeName();
+        }
+        String versionName = PhoneUtils.getPhoneUtils().getAppVersionName();
+        PhoneUtils utils = PhoneUtils.getPhoneUtils();
+
+        return new DeviceProperty(getDeviceInfo().deviceId, versionName,
+                System.currentTimeMillis() * 1000, getVersionStr(), ipConnectivity,
+                dnResolvability, location.getLongitude(), location.getLatitude(),
+                location.getProvider(), networkType, carrierName,
+                utils.getCurrentBatteryLevel(), utils.isCharging(),
+                null, 0);
+    }
 }

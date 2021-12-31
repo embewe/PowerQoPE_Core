@@ -6,8 +6,6 @@
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.PhilJay/MPAndroidChart/v3.0.0-beta1/48e658cef7f1d533266c0f3dda50ac8d506b4086/MPAndroidChart-v3.0.0-beta1-javadoc.jar!/" />
     </JAVADOC>
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.PhilJay/MPAndroidChart/v3.0.0-beta1/72cd409034749fa5cf7a9481d87ba65429fc57a0/MPAndroidChart-v3.0.0-beta1-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

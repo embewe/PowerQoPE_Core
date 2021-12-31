@@ -1,14 +1,24 @@
 package za.ac.uct.cs.powerqope.fragment;
 
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
+
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.fragment.app.Fragment;
+
+import za.ac.uct.cs.powerqope.AdvancedActivity;
+import za.ac.uct.cs.powerqope.Config;
+import za.ac.uct.cs.powerqope.R;
+import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
+import za.ac.uct.cs.powerqope.dns.DNSCommunicator;
+import za.ac.uct.cs.powerqope.util.PhoneUtils;
+import za.ac.uct.cs.powerqope.util.Util;
+import za.ac.uct.cs.powerqope.util.WebSocketConnector;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +26,10 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.fragment.app.Fragment;
-
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.Target;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
+import static android.content.Context.MODE_PRIVATE;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,43 +43,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-import za.ac.uct.cs.powerqope.AdvancedActivity;
-import za.ac.uct.cs.powerqope.Config;
-import za.ac.uct.cs.powerqope.R;
-import za.ac.uct.cs.powerqope.activity.PrefManager;
-import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
-import za.ac.uct.cs.powerqope.dns.DNSCommunicator;
-import za.ac.uct.cs.powerqope.util.PhoneUtils;
-import za.ac.uct.cs.powerqope.util.Util;
-import za.ac.uct.cs.powerqope.util.WebSocketConnector;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment {
 
     private static final String TAG = "HomeFragment";
-    private static final ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
+    private static ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
 
     public HomeFragment() {
         // Required empty public constructor
     }
-    SettingsFragment sf = new SettingsFragment();
-    private ShowcaseView showcaseView;
-    private int counter = 0;
-    private ShowcaseView mGuideView;
-    private ShowcaseView.Builder builder;
-    private PrefManager prefManager;
-    Switch costInformation, visuals;
-    LinearLayout connected, high, medium,low;
+
+    LinearLayout connected;
     SwitchCompat switchCompat;
     RadioButton radioButton, radioButton1, radioButton2, radioButton3;
-    TextView txtHead;
     static TextView serverInfoTxt;
-    LinearLayout linearLayout, linearLayout1, linearLayout2, linearLayout3, linearLayoutV1, linearLayoutV2, linearLayoutV3;
 
     String MY_PREFS_NAME = "preferences";
+
     static String selectedConfig;
     public static String vpnHost;
     static SharedPreferences prefs;
@@ -106,7 +93,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+
         switchCompat = v.findViewById(R.id.switch1);
         connected = v.findViewById(R.id.connected);
         radioButton = v.findViewById(R.id.radioButton);
@@ -114,84 +101,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         radioButton2 = v.findViewById(R.id.radioButton2);
         radioButton3 = v.findViewById(R.id.radioButton3);
         serverInfoTxt = v.findViewById(R.id.measurements);
-        txtHead = v.findViewById(R.id.txtHead);
-        high = v.findViewById(R.id.high_cost_info);
-        medium = v.findViewById(R.id.medium_cost_info);
-        low = v.findViewById(R.id.low_cost_info);
+
         prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         switchCompat.setChecked(prefs.getBoolean("connect", false));
         radioButton.setChecked(prefs.getBoolean("radioButton", false));
         radioButton1.setChecked(prefs.getBoolean("radioButton1", false));
         radioButton2.setChecked(prefs.getBoolean("radioButton2", false));
         radioButton3.setChecked(prefs.getBoolean("radioButton3", false));
-        costInformation= view.findViewById(R.id.switch34);
-        costInformation.setChecked(prefs.getBoolean("cost", true));
-        visuals = view.findViewById(R.id.switch50);
-        visuals.setChecked(prefs.getBoolean("visuals", true));
-        linearLayoutV1 = v.findViewById(R.id.visual_high);
-        linearLayoutV2 = v.findViewById(R.id.visual_medium);
-        linearLayoutV3 = v.findViewById(R.id.visual_low);
-
-        if(costInformation.isChecked()==true){
-            high.setVisibility(View.VISIBLE);
-            low.setVisibility(View.VISIBLE);
-            medium.setVisibility(View.VISIBLE);
-            txtHead.setVisibility(View.GONE);
-            if(visuals.isChecked()==true){
-                linearLayoutV1.setVisibility(View.VISIBLE);
-                linearLayoutV2.setVisibility(View.VISIBLE);
-                linearLayoutV3.setVisibility(View.VISIBLE);
-            }
-            else {
-                linearLayoutV1.setVisibility(View.GONE);
-                linearLayoutV2.setVisibility(View.GONE);
-                linearLayoutV3.setVisibility(View.GONE);
-            }
-        }
-        else{
-            txtHead.setVisibility(View.VISIBLE);
-            high.setVisibility(View.GONE);
-            low.setVisibility(View.GONE);
-            medium.setVisibility(View.GONE);
-            linearLayoutV1.setVisibility(View.GONE);
-            linearLayoutV2.setVisibility(View.GONE);
-            linearLayoutV3.setVisibility(View.GONE);
-        }
-        linearLayout = v.findViewById(R.id.linearRadiobutton);
-        linearLayout1 = v.findViewById(R.id.linearRadiobutton1);
-        linearLayout2 = v.findViewById(R.id.linearRadiobutton2);
-        linearLayout3 = v.findViewById(R.id.linearRadiobutton3);
-
-
-        Target target = new ViewTarget(switchCompat);
-
-        prefManager=new PrefManager(getContext());
-        //call this method with title,text,view of first element(where to start highlights)
-        if (prefManager.isFirstTimeLaunch()) {
-            prefManager.setFirstTimeLaunch(false);
-            showcaseView = new ShowcaseView.Builder(getActivity())
-                    .setTarget(new ViewTarget(linearLayout))
-                    .setContentTitle("High security")
-                    .setContentText("This option helps you configure better security, privacy and content filtering. The network speed may degrade")
-                    .setOnClickListener(this)
-                    .setStyle(R.style.CustomShowCaseTheme)
-                    .build();
-            showcaseView.setButtonText("next");
-            /*new ShowcaseView.Builder(getActivity())
-                    .setTarget(target)
-                    .setContentTitle("ShowcaseView")
-                    .setContentText("This is highlighting the Home button")
-                    .hideOnTouchOutside()
-                    .build();*/
-            
-        }
-        SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        switchCompat.setChecked(prefs.getBoolean("connect",false));
-        radioButton.setChecked(prefs.getBoolean("radioButton",false));
-        radioButton1.setChecked(prefs.getBoolean("radioButton1",false));
-        radioButton2.setChecked(prefs.getBoolean("radioButton2",false));
-        radioButton3.setChecked(prefs.getBoolean("radioButton3",false));
-
 
         selectedConfig =
                 (radioButton.isChecked() ? "high" :
@@ -221,21 +137,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 String options = extras.getString("advancedOptions");
                                 WebSocketConnector connector = WebSocketConnector.getInstance();
                                 try {
-                                    connector.modifyConfig(new JSONObject(options), vpnServerInfo);
+                                    connector.modifyConfig(new JSONObject(options), vpnServerInfo, true);
                                 } catch (JSONException e) {
                                     Log.e(TAG, "onCheckedChanged: Error parsing JSON");
                                 }
                             } else if (advancedFilter != null) {
                                 WebSocketConnector connector = WebSocketConnector.getInstance();
                                 try {
-                                    connector.modifyConfig(new JSONObject(advancedFilter), vpnServerInfo);
+                                    connector.modifyConfig(new JSONObject(advancedFilter), vpnServerInfo, true);
                                 } catch (JSONException e) {
                                     Log.e(TAG, "onCheckedChanged: Error parsing JSON");
                                 }
                             }
                         } else {
                             WebSocketConnector connector = WebSocketConnector.getInstance();
-                            PhoneUtils.setGlobalContext(getActivity().getApplicationContext());
                             PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
                             JSONObject payload = new JSONObject();
                             try {
@@ -268,31 +183,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (radioButton.isChecked() == true) {
-                    /*if(visuals.isChecked()==true){
-                        linearLayoutV1.setVisibility(View.VISIBLE);
-                        linearLayoutV2.setVisibility(View.VISIBLE);
-                        linearLayoutV3.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        linearLayoutV1.setVisibility(View.GONE);
-                        linearLayoutV2.setVisibility(View.GONE);
-                        linearLayoutV3.setVisibility(View.GONE);
-                    }*/
                     switchCompat.setChecked(false);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton", true);
                     editor.apply();
-                    //high.setVisibility(View.VISIBLE);
                     Toast.makeText(getActivity(), "High security selected", Toast.LENGTH_SHORT).show();
                     selectedConfig = "high";
                 } else {
-                    //high.setVisibility(View.GONE);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton", false);
                     editor.apply();
-                    //linearLayoutV1.setVisibility(View.GONE);
-                    //linearLayoutV2.setVisibility(View.GONE);
-                    //linearLayoutV3.setVisibility(View.GONE);
                 }
             }
         });
@@ -301,31 +201,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 if (radioButton1.isChecked() == true) {
-                    /*if(visuals.isChecked()==true){
-                        linearLayoutV1.setVisibility(View.VISIBLE);
-                        linearLayoutV2.setVisibility(View.VISIBLE);
-                        linearLayoutV3.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        linearLayoutV1.setVisibility(View.GONE);
-                        linearLayoutV2.setVisibility(View.GONE);
-                        linearLayoutV3.setVisibility(View.GONE);
-                    }*/
                     switchCompat.setChecked(false);
-                    //medium.setVisibility(View.VISIBLE);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton1", true);
                     editor.apply();
                     Toast.makeText(getActivity(), "Medium security selected", Toast.LENGTH_SHORT).show();
                     selectedConfig = "medium";
                 } else {
-                    //medium.setVisibility(View.GONE);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton1", false);
                     editor.apply();
-                    //linearLayoutV1.setVisibility(View.GONE);
-                    //linearLayoutV2.setVisibility(View.GONE);
-                    //linearLayoutV3.setVisibility(View.GONE);
                 }
             }
         });
@@ -334,17 +219,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 if (radioButton2.isChecked() == true) {
-                    /*if(visuals.isChecked()==true){
-                        linearLayoutV1.setVisibility(View.VISIBLE);
-                        linearLayoutV2.setVisibility(View.VISIBLE);
-                        linearLayoutV3.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        linearLayoutV1.setVisibility(View.GONE);
-                        linearLayoutV2.setVisibility(View.GONE);
-                        linearLayoutV3.setVisibility(View.GONE);
-                    }*/
-                    //low.setVisibility(View.VISIBLE);
                     switchCompat.setChecked(false);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton2", true);
@@ -352,14 +226,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), "Low security selected", Toast.LENGTH_SHORT).show();
                     selectedConfig = "low";
                 } else {
-                    //low.setVisibility(View.GONE);
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putBoolean("radioButton2", false);
                     editor.apply();
-                    //linearLayoutV1.setVisibility(View.GONE);
-                    //linearLayoutV2.setVisibility(View.GONE);
-                    //linearLayoutV3.setVisibility(View.GONE);
-
                 }
             }
         });
@@ -384,7 +253,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
-
 
        /*  click.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
@@ -417,47 +285,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         spinnerAdvancedOptions.setAdapter(adapter);*/
         return v;
     }
-    public void onClick(View v) {
-        switch (counter) {
-            case 0:
-                showcaseView.setShowcase(new ViewTarget(linearLayout1), true);
-                showcaseView.setContentTitle("Medium security");
-                showcaseView.setContentText("This option helps you configure moderate security and privacy. The network speed may moderately degrade");
-                break;
 
-            case 1:
-                showcaseView.setShowcase(new ViewTarget(linearLayout2), true);
-                showcaseView.setContentTitle("Low security");
-                showcaseView.setContentText("Using this option, your browsing activities may be seen by attackers. However, it lets you block malware, ads and adult content. You have better network speed.");
-                break;
-
-            case 2:
-                showcaseView.setShowcase(new ViewTarget(linearLayout3), true);
-                showcaseView.setContentTitle("Advanced security");
-                showcaseView.setContentText("This option gives you flexibility to configure your desired level of security, privacy and content filtering ");
-                break;
-
-            case 3:
-                showcaseView.setShowcase(new ViewTarget(switchCompat), true);
-                showcaseView.setContentTitle("Switch button");
-                showcaseView.setContentText("After choosing your desired level of security above, tap this button to effect the configuration on your phone.");
-                showcaseView.setButtonText("close");
-                break;
-
-            case 4:
-                showcaseView.hide();
-                setAlpha(1.0f, radioButton, radioButton1, radioButton2, radioButton3, switchCompat);
-                break;
-        }
-        counter++;
-    }
-    private void setAlpha(float alpha, View... views) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            for (View view : views) {
-                view.setAlpha(alpha);
-            }
-        }
-    }
     private void restoreDefaults() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         String ln;
@@ -518,16 +346,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-    @Override
-    public void onResume() {
-        super.onResume();
 
-        if (prefs.getBoolean("firstrun", true)) {
-            // Do first run stuff here then set 'firstrun' as false
-            // using the following line to edit/commit prefs
-            prefs.edit().putBoolean("firstrun", false).commit();
-        }
-    }
     public static String getServerInfoTxt() {
         return serverInfoTxt.getText().toString();
     }
