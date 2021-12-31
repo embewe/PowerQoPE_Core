@@ -4,12 +4,15 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.2296875" />
-        <entry key="app/src/main/res/layout/activity_advanced.xml" value="0.33177083333333335" />
+        <entry key="app/src/main/res/layout/activity_advanced.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/activity_private_dns2.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/activity_speed_test.xml" value="0.1796875" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33177083333333335" />
+        <entry key="app/src/main/res/layout/fragment_httptest.xml" value="0.33177083333333335" />
+        <entry key="app/src/main/res/layout/fragment_video_speed_reports.xml" value="0.33177083333333335" />
+        <entry key="app/src/main/res/layout/fragment_video_test.xml" value="0.33177083333333335" />
       </map>
     </option>
   </component>

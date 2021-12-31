@@ -10,8 +10,12 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import za.ac.uct.cs.powerqope.AnalyticsEvents;
 import za.ac.uct.cs.powerqope.AnalyticsTextViewHelper;
+import za.ac.uct.cs.powerqope.Config;
 import za.ac.uct.cs.powerqope.PlayerActivity;
 import za.ac.uct.cs.powerqope.R;
+import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
+import za.ac.uct.cs.powerqope.util.PhoneUtils;
+import za.ac.uct.cs.powerqope.util.WebSocketConnector;
 import za.ac.uct.cs.powerqope.utils.GetSpeedTestHostsHandler;
 
 import android.util.Log;
@@ -46,6 +50,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -53,6 +58,9 @@ import java.util.HashSet;
 
 import static android.content.Context.MODE_PRIVATE;
 import static za.ac.uct.cs.powerqope.fragment.SpeedCheckerFragment.DATABASE_NAME;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class VideoTestFragment extends Fragment {
@@ -80,6 +88,7 @@ LinearLayout buttonView;
         // Required empty public constructor
     }
     Button button;
+    private static ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -221,7 +230,32 @@ LinearLayout buttonView;
                                     "VALUES \n" +
                                     "(?, ?, ?, ?);";
                             String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-                            mDatabase.execSQL(insertSQL, new String[]{debugTextView.getText().toString(),titleTextView.getText().toString(), titleTextView1.getText().toString(), currentDateTimeString});
+                            mDatabase.execSQL(insertSQL, new String[]{debugTextView.getText().toString(),titleTextView1.getText().toString(), titleTextView.getText().toString(), currentDateTimeString});
+                            JSONObject resultObj = new JSONObject();
+                            try {
+                                JSONObject values = new JSONObject();
+                                values.put("secLevel", CONFIG.getConfig().getProperty("secLevel"));
+                                values.put("filter", CONFIG.getConfig().getProperty("fallbackDNS"));
+                                values.put("filterProvider", CONFIG.getConfig().getProperty("filterProvider"));
+                                String bufferStr = debugTextView.getText().toString().replaceAll("%\n", "");
+                                String loadTimeStr = titleTextView1.getText().toString().replaceAll(" Ms", "");
+                                String bandwidthStr = titleTextView.getText().toString().replaceAll("Kbps", "");
+                                values.put("buffer", bufferStr);
+                                values.put("loadTime", loadTimeStr);
+                                values.put("bandwidth", bandwidthStr);
+                                resultObj.put("success", true);
+                                resultObj.put("taskKey", "USER_INITIATED");
+                                resultObj.put("accountName", "Anonymous");
+                                resultObj.put("deviceId", PhoneUtils.getPhoneUtils().getDeviceInfo().deviceId);
+                                resultObj.put("timestamp", System.currentTimeMillis());
+                                resultObj.put("type", "video");
+                                resultObj.put("values", values);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            WebSocketConnector.getInstance().sendMessage(Config.STOMP_SERVER_JOB_RESULT_ENDPOINT, resultObj.toString());
                         }});
                     stateString = "ExoPlayer.STATE_ENDED     -";
                     break;

@@ -2,6 +2,8 @@ package za.ac.uct.cs.powerqope;
 
 import java.util.Map;
 
+import okhttp3.CipherSuite;
+
 public interface Config {
     long WELCOME_SCREEN_DURATION_MSEC = 1500;
 
@@ -80,7 +82,7 @@ public interface Config {
     String PREF_KEY_MEASUREMENTS_ENABLED = "PREF_KEY_MEASUREMENTS_ENABLED";
     String PREF_KEY_UNIQUE_ID = "PREF_KEY_UNIQUE_ID";
     String PREF_KEY_RESOLVED_TARGET = "PREF_KEY_RESOLVED_TARGET";
-
+    String PREF_KEY_RESOLVED_DNS_PROXY = "PREF_KEY_RESOLVED_DNS_PROXY";
 
     int DEFAULT_DATA_MONITOR_PERIOD_DAY= 1;
     /** Constants for the splash screen */
@@ -88,9 +90,9 @@ public interface Config {
 
 
     /** Constants to access the server **/
-    String SERVER_ADDRESS="192.168.1.77";
-    int SERVER_PORT=8080;
+    int SERVER_PORT=7800;
     String SERVER_HOST_ADDRESS = "lab.enockmbewe.com";
+    String DNS_PROXY_ADDRESS = "lab.enockmbewe.com";
     /** Enum for all the permissions that we need*/
     enum PERMISSION_IDS {
         INTERNET, GET_ACCOUNTS, READ_PHONE_STATE, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE, WAKE_LOCK, RECEIVE_BOOT_COMPLETED, ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION

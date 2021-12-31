@@ -3,8 +3,11 @@ package za.ac.uct.cs.powerqope;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
@@ -12,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.net.VpnService;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +46,9 @@ import java.security.Security;
 import java.util.Arrays;
 import java.util.Properties;
 
+import de.blinkt.openvpn.VpnProfile;
+import de.blinkt.openvpn.core.OpenVPNService;
+import de.blinkt.openvpn.core.VPNLaunchHelper;
 import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
 import za.ac.uct.cs.powerqope.dns.DNSFilterService;
 import za.ac.uct.cs.powerqope.fragment.HTTPTestFragment;
@@ -60,6 +67,7 @@ import za.ac.uct.cs.powerqope.util.WebSocketConnector;
 public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener {
 
     private static final String TAG = "MainActivity";
+    private static final int START_REMOTE_VPN_PROFILE = 70;
 
     private static MainActivity app;
 
@@ -72,9 +80,13 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     private static final int PERMISSIONS_REQUEST_CODE = 6789;
     protected static ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
     private String target;
+    private boolean remoteVpnEnabled = false;
+    private boolean isBoundRemoteVpnService = false;
 
     protected static Properties config = null;
     protected static boolean switchingConfig = false;
+    private static VpnProfile remoteVpnProfile;
+    private static OpenVPNService remoteVPNService;
 
     private String[] screenTitles;
     private Drawable[] screenIcons;
@@ -85,21 +97,44 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     @Override
     protected void onStart() {
         requestPermissions();
+        bindToRemoteVpnService();
         super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isBoundRemoteVpnService) {
+            isBoundRemoteVpnService = false;
+            unbindService(vpnConnection);
+        }
     }
 
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    if(remoteVpnEnabled)
+                        startRemoteVpnSvc();
+                    else
                         startDNSSvc();
-                    } else{
-                        Log.e(TAG, "VPN dialog not accepted!\r\nPress restart to display dialog again!");
-                    }
+                } else{
+                    Log.e(TAG, "VPN dialog not accepted!\r\nPress restart to display dialog again!");
                 }
             });
+
+    private ServiceConnection vpnConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            OpenVPNService.LocalBinder binder = (OpenVPNService.LocalBinder) service;
+            remoteVPNService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            remoteVPNService = null;
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -313,25 +348,31 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             Log.i(TAG, "Filter statistic since last restart:");
             return;
         }
-
+        String secLevel = getConfig().getProperty("secLevel", "default");
         try {
-            boolean vpnInAdditionToProxyMode = Boolean.parseBoolean(getConfig().getProperty("vpnInAdditionToProxyMode", "true"));
-            boolean vpnDisabled = !vpnInAdditionToProxyMode && Boolean.parseBoolean(getConfig().getProperty("dnsProxyOnAndroid", "false"));
-            Intent intent = null;
-            if (!vpnDisabled)
-                intent = VpnService.prepare(this.getApplicationContext());
+            remoteVpnEnabled = secLevel.equalsIgnoreCase("high");
+            Intent intent = VpnService.prepare(this.getApplicationContext());
             if (intent != null) {
                 activityResultLauncher.launch(intent);
-            } else { //already prepared or VPN disabled
-                startDNSSvc();
+            } else {//already prepared or VPN disabled
+                if(remoteVpnEnabled)
+                    startRemoteVpnSvc();
+                else
+                    startDNSSvc();
             }
         } catch (NullPointerException e) { // NullPointer might occur on Android 4.4 when VPN already initialized
             Log.i(TAG, "Seems we are on Android 4.4 or older!");
-            startDNSSvc(); // assume it is ok!
+            if(remoteVpnEnabled)
+                startRemoteVpnSvc();
+            else
+                startDNSSvc();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
 
+    }
+    private void startRemoteVpnSvc(){
+        VPNLaunchHelper.startOpenVpn(remoteVpnProfile, getBaseContext());
     }
 
     private void startDNSSvc() {
@@ -372,29 +413,38 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
         @Override
         protected String doInBackground(String[] params) {
-            String serverIP = null;
+            String serverIP = null, labAddress = null;
             try {
                 InetAddress inetAddress = InetAddress.getByName(Config.SERVER_HOST_ADDRESS);
                 serverIP = inetAddress.getHostAddress();
+                labAddress = InetAddress.getByName(Config.DNS_PROXY_ADDRESS).getHostAddress();
             }
             catch (UnknownHostException e){
                 e.printStackTrace();
             }
-            return serverIP;
+            return serverIP+"-"+labAddress;
         }
 
         @Override
         protected void onPostExecute(String message) {
-            target = "wss://" + message + ":" + Config.SERVER_PORT + Config.STOMP_SERVER_CONNECT_ENDPOINT;
+            String[] mSplit = message.split("-");
+            target = "wss://" + mSplit[0] + ":" + Config.SERVER_PORT + Config.STOMP_SERVER_CONNECT_ENDPOINT;
             SharedPreferences prefs = getSharedPreferences(Config.PREF_KEY_RESOLVED_TARGET, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(Config.PREF_KEY_RESOLVED_TARGET, target);
+            editor.putString(Config.PREF_KEY_RESOLVED_DNS_PROXY, mSplit[1]);
             editor.apply();
             WebSocketConnector webSocketConnector = WebSocketConnector.getInstance();
             WebSocketConnector.setContext(getBaseContext());
             if (!webSocketConnector.isConnected())
                 webSocketConnector.connectWebSocket(target);
         }
+    }
+
+    private void bindToRemoteVpnService() {
+        Intent intent = new Intent(this, OpenVPNService.class);
+        intent.setAction(OpenVPNService.START_SERVICE);
+        isBoundRemoteVpnService = bindService(intent, vpnConnection, Context.BIND_AUTO_CREATE);
     }
 }
 

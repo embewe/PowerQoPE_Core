@@ -21,9 +21,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,7 +45,7 @@ public class AdvancedActivity extends AppCompatActivity {
     Switch switchEnableVpn, switchAutoConnect;
     RadioButton radioButton4, radioButton5, radioButton6;
     EditText editText, editText2, editText3;
-    Spinner dropdown, dropdown1, dropdown2, dropdown3;
+    Spinner dropdown, dropdown1, dropdown2, dropdown3, dropdown4, vpnHosts;
     String[] advancedOptions;
 
     Map<String, List<String>> filterOptionsMap = new HashMap<>();
@@ -54,6 +60,9 @@ public class AdvancedActivity extends AppCompatActivity {
     DNS_TYPES selDNSType;
     String selDNSProvider;
     String selDNSFilter;
+    String selCipherLevel;
+    String selVpnHost;
+    List<String> vpnServerList;
 
     boolean validationsDone = false;
 
@@ -132,6 +141,8 @@ public class AdvancedActivity extends AppCompatActivity {
         dropdown1 = findViewById(R.id.spinner2);
         dropdown2 = findViewById(R.id.spinner3);
         dropdown3 = findViewById(R.id.spinner4);
+        dropdown4 = findViewById(R.id.spinner5);
+        vpnHosts = findViewById(R.id.vpnHosts);
         switchAutoConnect = findViewById(R.id.switchAutoConnect);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         switchEnableVpn.setChecked(prefs.getBoolean("switchEnableVpn", false));
@@ -173,6 +184,21 @@ public class AdvancedActivity extends AppCompatActivity {
                 selDNSFilter = adapterView.getItemAtPosition(i).toString();
                 SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                 editor.putString("selDNSFilter", selDNSFilter);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        dropdown4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selCipherLevel = adapterView.getItemAtPosition(i).toString();
+                SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                editor.putString("selCipherLevel", selCipherLevel);
                 editor.apply();
             }
 
@@ -273,12 +299,14 @@ public class AdvancedActivity extends AppCompatActivity {
                                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                                     editor.putBoolean("switchEnableVpn", true);
                                     editor.apply();
+                                    populateVpnList();
                                 }
                             });
                     builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switchEnableVpn.setChecked(false);
+                            vpnServerList.clear();
 
                         }
                     });
@@ -428,9 +456,11 @@ public class AdvancedActivity extends AppCompatActivity {
                 if(validationsDone) {
                     SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                     editor.putString("advancedFilter", filter.toString());
+                    editor.putString("advancedCipher", selCipherLevel);
                     editor.apply();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("advancedOptions", filter.toString());
+                    intent.putExtra("advancedCipher", selCipherLevel);
                     startActivity(intent);
                 }
             }
@@ -439,7 +469,9 @@ public class AdvancedActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate: selDNSProvider = "+selDNSProvider);
         selDNSFilter = prefs.getString("selDNSFilter", "System Filter");
         Log.i(TAG, "onCreate: selDNSFilter = "+selDNSFilter);
+        selCipherLevel = prefs.getString("selCipherLevel", "low");
         String customAddress = prefs.getString("editText", null);
+        selVpnHost = prefs.getString("selVpnHost", null);
         Log.i(TAG, "onCreate: customAddress = "+customAddress);
         List<String> providersList = new ArrayList<>(Arrays.asList(advancedOptions));
 
@@ -469,6 +501,53 @@ public class AdvancedActivity extends AppCompatActivity {
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dropdown3.setAdapter(adapter1);
         dropdown3.setSelection(filterOptions.indexOf(selDNSFilter));
+
+        List<String> cipherLevels = new ArrayList<String>(){{
+            add("low");
+            add("medium");
+            add("high");
+        }};
+        ArrayAdapter adapter2 = new ArrayAdapter(this, R.layout.spinner_item2, cipherLevels);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dropdown4.setAdapter(adapter2);
+        dropdown4.setSelection(cipherLevels.indexOf(selCipherLevel));
+
+        if(switchEnableVpn.isChecked()) populateVpnList();
+    }
+
+    private JSONArray loadVpnServers(){
+        JSONArray obj = null;
+        try {
+            InputStream is = getAssets().open("vpn.json");
+            byte[] buffer = new byte[is.available()];
+            is.read(buffer);
+            is.close();
+            obj = new JSONArray(new String(buffer, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            Log.e(TAG, "loadVpnServers: IOException occurred "+e.getMessage());
+        } catch (JSONException e) {
+            Log.e(TAG, "loadVpnServers: JSONException occurred "+e.getMessage());
+        }
+        return obj;
+    }
+
+    private void populateVpnList(){
+        vpnServerList = new ArrayList<>();
+        JSONArray servers = loadVpnServers();
+        try {
+            for (int i = 0; i < servers.length(); i++) {
+                JSONObject server = servers.getJSONObject(i);
+                vpnServerList.add(server.getString("hostName"));
+            }
+            ArrayAdapter adapter3 = new ArrayAdapter(AdvancedActivity.this, R.layout.spinner_item2, vpnServerList);
+            adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            vpnHosts.setAdapter(adapter3);
+            vpnHosts.setOnItemSelectedListener(new VpnServerChangeListener());
+            adapter3.notifyDataSetChanged();
+            if(selVpnHost != null) vpnHosts.setSelection(vpnServerList.indexOf(selVpnHost));
+        } catch (JSONException e){
+            Log.e(TAG, "JSONException occurred"+e.getMessage());
+        }
     }
 
     private class DNSItemChangeListener implements AdapterView.OnItemSelectedListener {
@@ -492,6 +571,22 @@ public class AdvancedActivity extends AppCompatActivity {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             dropdown3.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    }
+
+    private class VpnServerChangeListener implements AdapterView.OnItemSelectedListener {
+
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            selVpnHost = vpnServerList.get(i);
+            SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+            editor.putString("selVpnHost", selVpnHost);
+            editor.apply();
         }
 
         @Override

@@ -68,17 +68,17 @@ public class ConnectionQuality {
 
     public static int getConnectionQuality(String speedStr, String sessionsStr, String pingStr) {
 
-        int speed = Integer.parseInt(speedStr);
-        int sessions = Integer.parseInt(sessionsStr);
+        long speed = Long.parseLong(speedStr);
+        long sessions = Long.parseLong(sessionsStr);
 
         int ping = 0;
         if (!(pingStr.equals("-") || pingStr.equals(""))) {
             ping = Integer.parseInt(pingStr);
         }
 
-        if (speed > 10000000 && ping < 30 && (sessions != 0 && sessions < 100)) {
+        if (speed > 10000000L && ping < 30 && (sessions != 0 && sessions < 100)) {
             return 3;
-        } else if (speed < 1000000 || ping > 100 || (sessions == 0 || sessions > 150)) {
+        } else if (speed < 1000000L || ping > 100 || (sessions == 0 || sessions > 150)) {
             return 1;
         } else {
             return 2;
