@@ -23,6 +23,7 @@ public class HttpDownloadTest extends Thread {
     HttpURLConnection httpConn = null;
 
     public HttpDownloadTest(String fileURL) {
+        fileURL = fileURL.replace("http://", "https://");
         this.fileURL = fileURL;
     }
 
