@@ -1,6 +1,8 @@
 package za.ac.uct.cs.powerqope.utils;
 
 
+import android.util.Log;
+
 import java.io.DataOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,7 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class HttpUploadTest extends Thread {
-
     public String fileURL = "";
     static int uploadedKByte = 0;
     double uploadElapsedTime = 0;
@@ -20,6 +21,7 @@ public class HttpUploadTest extends Thread {
     long startTime;
 
     public HttpUploadTest(String fileURL) {
+        fileURL = fileURL.replace("http://", "https://");
         this.fileURL = fileURL;
     }
 
@@ -92,7 +94,6 @@ public class HttpUploadTest extends Thread {
 }
 
 class HandlerUpload extends Thread {
-
     URL url;
 
     public HandlerUpload(URL url) {

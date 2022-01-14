@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -37,7 +38,7 @@ import za.ac.uct.cs.powerqope.utils.HttpUploadTest;
 import za.ac.uct.cs.powerqope.utils.PingTest;
 
 public class SpeedTestActivity extends AppCompatActivity {
-
+    private static final String TAG = "SpeedTestActivity";
     static int position = 0;
     static int lastPosition = 0;
     GetSpeedTestHostsHandler getSpeedTestHostsHandler = null;
