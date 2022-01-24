@@ -97,6 +97,9 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     @Override
     protected void onStart() {
         requestPermissions();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED)
+            initPhone();
         bindToRemoteVpnService();
         super.onStart();
     }
@@ -398,8 +401,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                     allPermissionsGranted = false;
             }
             if (allPermissionsGranted) {
-                PhoneUtils.setGlobalContext(this.getApplicationContext());
-                PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
+                initPhone();
                 loadAndApplyConfig(true);
             }
         } else {
@@ -446,5 +448,13 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
         intent.setAction(OpenVPNService.START_SERVICE);
         isBoundRemoteVpnService = bindService(intent, vpnConnection, Context.BIND_AUTO_CREATE);
     }
+
+    private PhoneUtils initPhone(){
+        PhoneUtils.setGlobalContext(this.getApplicationContext());
+        PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
+
+        return phoneUtils;
+    }
+
 }
 
