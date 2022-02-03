@@ -516,6 +516,7 @@ public class SpeedCheckerFragment extends Fragment {
                                 String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
                                 mDatabase.execSQL(insertSQL, new String[]{downloadTextView.getText().toString(), uploadTextView.getText().toString(), currentDateTimeString});
                                 JSONObject resultObj = new JSONObject();
+                                PhoneUtils.setGlobalContext(getActivity().getApplicationContext());
                                 try {
                                     JSONObject values = new JSONObject();
                                     values.put("secLevel", CONFIG.getConfig().getProperty("secLevel"));

@@ -142,8 +142,10 @@ public class WebSocketConnector {
                 context.startService(intent);
             }
 
-            if(shouldVpnBeOnNow)
+            if(shouldVpnBeOnNow) {
                 loadVpnProfile(vpn);
+                HomeFragment.setServerInfoTxt(null, true);
+            }
 
             if (changed) {
                 CONFIG.updateConfig(out.toByteArray());

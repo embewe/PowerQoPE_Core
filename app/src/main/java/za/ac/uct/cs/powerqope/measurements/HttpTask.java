@@ -38,6 +38,7 @@
   import okhttp3.OkHttpClient;
   import okhttp3.Request;
   import okhttp3.Response;
+  import okhttp3.ResponseBody;
   import okhttp3.TlsVersion;
   import za.ac.uct.cs.powerqope.Config;
   import za.ac.uct.cs.powerqope.Logger;
@@ -230,14 +231,16 @@
                       success = false;
                   } else {
                       success = true;
-                      responseBody = response.body().string();
-                      Headers rHeaders = response.headers();
-                      for (int i = 0; i < rHeaders.size(); i++) {
-                          responseHeaders = rHeaders.name(i) + ":" + rHeaders.value(i);
+                      try(ResponseBody body = response.body()) {
+                          responseBody = body.string();
+                          Headers rHeaders = response.headers();
+                          for (int i = 0; i < rHeaders.size(); i++) {
+                              responseHeaders = rHeaders.name(i) + ":" + rHeaders.value(i);
+                          }
                       }
                   }
               }
-
+              PhoneUtils.setGlobalContext(parent.getApplicationContext());
               PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
 
               MeasurementResult result = new MeasurementResult(phoneUtils.getDeviceInfo().deviceId,

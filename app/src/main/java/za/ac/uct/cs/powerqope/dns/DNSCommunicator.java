@@ -42,7 +42,7 @@ public class DNSCommunicator {
 
 	public DNSCommunicator() {
 		dnsServerListener.setValue("");
-		dnsServerListener.observeForever(s -> HomeFragment.setServerInfoTxt(s));
+		dnsServerListener.observeForever(s -> HomeFragment.setServerInfoTxt(s, false));
 	}
 
 	private static int TIMEOUT = 12000;

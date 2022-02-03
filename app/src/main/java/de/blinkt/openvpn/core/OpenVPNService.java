@@ -127,7 +127,6 @@ public class OpenVPNService extends VpnService implements Callback {
         synchronized (mProcessLock) {
             mProcessThread = null;
         }
-        unregisterDeviceStateReceiver();
         ProfileManager.setConntectedVpnProfileDisconnected(this);
         mOpenVPNThread = null;
         if (!mStarting) {
@@ -491,18 +490,6 @@ public class OpenVPNService extends VpnService implements Callback {
             mProcessThread = new Thread(processThread, "OpenVPNProcessThread");
             mProcessThread.start();
         }
-
-        new Handler(getMainLooper()).post(new Runnable() {
-                         @Override
-                         public void run() {
-                             if (mDeviceStateReceiver != null)
-                                 unregisterDeviceStateReceiver();
-
-                             registerDeviceStateReceiver(mManagement);
-                         }
-                     }
-
-                );
     }
 
     private void stopOldOpenVPNProcess() {

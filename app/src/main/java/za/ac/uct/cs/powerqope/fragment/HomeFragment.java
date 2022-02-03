@@ -117,7 +117,7 @@ public class HomeFragment extends Fragment {
         vpnHost = prefs.getString("selVpnHost", null);
         boolean isVpnOn = selectedConfig.equalsIgnoreCase("high") || (prefs.getBoolean("switchEnableVpn", false) && (vpnHost != null));
         String info = (isVpnOn ? vpnHost : DNSCommunicator.getInstance().getLastDNSAddress());
-        setServerInfoTxt(info);
+        setServerInfoTxt(info, true);
 
         String advancedFilter = prefs.getString("advancedFilter", null);
 
@@ -151,6 +151,7 @@ public class HomeFragment extends Fragment {
                             }
                         } else {
                             WebSocketConnector connector = WebSocketConnector.getInstance();
+                            PhoneUtils.setGlobalContext(getActivity().getApplicationContext());
                             PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
                             JSONObject payload = new JSONObject();
                             try {
@@ -320,9 +321,8 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public static void setServerInfoTxt(String info) {
-        boolean isVpnOn = selectedConfig.equalsIgnoreCase("high") || (prefs.getBoolean("switchEnableVpn", false) && (vpnHost != null));
-        if (isVpnOn)
+    public static void setServerInfoTxt(String info, boolean vpnMode) {
+        if (vpnMode)
             serverInfoTxt.setText(String.format("VPN mode ON\nConnected to : %s", vpnHost));
         else {
             try {

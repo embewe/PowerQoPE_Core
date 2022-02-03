@@ -306,7 +306,7 @@ public class AdvancedActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switchEnableVpn.setChecked(false);
-                            vpnServerList.clear();
+                            if(vpnServerList != null) vpnServerList.clear();
 
                         }
                     });
