@@ -151,6 +151,7 @@ public class HomeFragment extends Fragment {
                             }
                         } else {
                             WebSocketConnector connector = WebSocketConnector.getInstance();
+                            PhoneUtils.setGlobalContext(getActivity().getApplicationContext());
                             PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
                             JSONObject payload = new JSONObject();
                             try {

@@ -238,6 +238,7 @@
                   }
               }
 
+              PhoneUtils.setGlobalContext(parent.getApplicationContext());
               PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
 
               MeasurementResult result = new MeasurementResult(phoneUtils.getDeviceInfo().deviceId,
