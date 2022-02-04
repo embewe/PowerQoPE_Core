@@ -21,7 +21,6 @@ public class HttpUploadTest extends Thread {
     long startTime;
 
     public HttpUploadTest(String fileURL) {
-        fileURL = fileURL.replace("http://", "https://");
         this.fileURL = fileURL;
     }
 

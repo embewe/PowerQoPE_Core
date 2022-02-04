@@ -437,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             editor.putString(Config.PREF_KEY_RESOLVED_DNS_PROXY, mSplit[1]);
             editor.apply();
             WebSocketConnector webSocketConnector = WebSocketConnector.getInstance();
-            WebSocketConnector.setContext(getBaseContext());
+            WebSocketConnector.setContext(getApplicationContext());
             if (!webSocketConnector.isConnected())
                 webSocketConnector.connectWebSocket(target);
         }
