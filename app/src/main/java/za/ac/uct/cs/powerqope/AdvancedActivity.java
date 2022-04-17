@@ -208,6 +208,21 @@ public class AdvancedActivity extends AppCompatActivity {
             }
         });
 
+        dropdown4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selCipherLevel = adapterView.getItemAtPosition(i).toString();
+                SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                editor.putString("selCipherLevel", selCipherLevel);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         switchAutoConnect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -571,6 +586,22 @@ public class AdvancedActivity extends AppCompatActivity {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             dropdown3.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+    }
+
+    private class VpnServerChangeListener implements AdapterView.OnItemSelectedListener {
+
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            selVpnHost = vpnServerList.get(i);
+            SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+            editor.putString("selVpnHost", selVpnHost);
+            editor.apply();
         }
 
         @Override

@@ -37,7 +37,6 @@
     <style name="CustomShowCaseTheme" parent="ShowcaseView.Light">
         <item name="sv_backgroundColor">#E61E2020</item>
         <item name="sv_detailTextAppearance">@style/CustomTitle</item>
-
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
