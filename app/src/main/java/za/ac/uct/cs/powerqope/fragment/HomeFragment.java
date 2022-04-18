@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,7 +39,9 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -60,7 +63,29 @@ public class HomeFragment extends Fragment {
 
     String MY_PREFS_NAME = "preferences";
 
-    String selectedConfig;
+    static String selectedConfig;
+    public static String vpnHost;
+    static SharedPreferences prefs;
+
+    private JSONObject acquireVpnServerInfo() {
+        try {
+            InputStream is = getActivity().getAssets().open("vpn.json");
+            byte[] buffer = new byte[is.available()];
+            is.read(buffer);
+            is.close();
+            JSONArray arr = new JSONArray(new String(buffer, StandardCharsets.UTF_8));
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject server = arr.getJSONObject(i);
+                if (server.getString("hostName").equals(vpnHost))
+                    return server;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "acquireVpnServerInfo: IOException occurred " + e.getMessage());
+        } catch (JSONException e) {
+            Log.e(TAG, "acquireVpnServerInfo: JSONException occurred " + e.getMessage());
+        }
+        return null;
+    }
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -77,9 +102,7 @@ public class HomeFragment extends Fragment {
         radioButton3 = v.findViewById(R.id.radioButton3);
         serverInfoTxt = v.findViewById(R.id.measurements);
 
-        setServerInfoTxt(DNSCommunicator.getInstance().getLastDNSAddress());
-
-        SharedPreferences prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         switchCompat.setChecked(prefs.getBoolean("connect", false));
         radioButton.setChecked(prefs.getBoolean("radioButton", false));
         radioButton1.setChecked(prefs.getBoolean("radioButton1", false));
@@ -88,9 +111,13 @@ public class HomeFragment extends Fragment {
 
         selectedConfig =
                 (radioButton.isChecked() ? "high" :
-                    (radioButton1.isChecked() ? "medium" :
-                        (radioButton2.isChecked() ? "low" :
-                                (radioButton3.isChecked() ? "advanced" : "default"))));
+                        (radioButton1.isChecked() ? "medium" :
+                                (radioButton2.isChecked() ? "low" :
+                                        (radioButton3.isChecked() ? "advanced" : "default"))));
+        vpnHost = prefs.getString("selVpnHost", null);
+        boolean isVpnOn = selectedConfig.equalsIgnoreCase("high") || (prefs.getBoolean("switchEnableVpn", false) && (vpnHost != null));
+        String info = (isVpnOn ? vpnHost : DNSCommunicator.getInstance().getLastDNSAddress());
+        setServerInfoTxt(info);
 
         String advancedFilter = prefs.getString("advancedFilter", null);
 
@@ -105,24 +132,26 @@ public class HomeFragment extends Fragment {
                         if (selectedConfig.equalsIgnoreCase("advanced")) {
                             Intent intent = getActivity().getIntent();
                             Bundle extras = intent.getExtras();
+                            JSONObject vpnServerInfo = acquireVpnServerInfo();
                             if (extras != null) {
                                 String options = extras.getString("advancedOptions");
                                 WebSocketConnector connector = WebSocketConnector.getInstance();
                                 try {
-                                    connector.modifyConfig(new JSONObject(options), null);
+                                    connector.modifyConfig(new JSONObject(options), vpnServerInfo, true);
                                 } catch (JSONException e) {
                                     Log.e(TAG, "onCheckedChanged: Error parsing JSON");
                                 }
                             } else if (advancedFilter != null) {
                                 WebSocketConnector connector = WebSocketConnector.getInstance();
                                 try {
-                                    connector.modifyConfig(new JSONObject(advancedFilter), null);
+                                    connector.modifyConfig(new JSONObject(advancedFilter), vpnServerInfo, true);
                                 } catch (JSONException e) {
                                     Log.e(TAG, "onCheckedChanged: Error parsing JSON");
                                 }
                             }
                         } else {
                             WebSocketConnector connector = WebSocketConnector.getInstance();
+                            PhoneUtils.setGlobalContext(getActivity().getApplicationContext());
                             PhoneUtils phoneUtils = PhoneUtils.getPhoneUtils();
                             JSONObject payload = new JSONObject();
                             try {
@@ -258,7 +287,7 @@ public class HomeFragment extends Fragment {
         return v;
     }
 
-    private void restoreDefaults(){
+    private void restoreDefaults() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         String ln;
         try {
@@ -287,34 +316,39 @@ public class HomeFragment extends Fragment {
             out.close();
 
             CONFIG.updateConfig(out.toByteArray());
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, "restoreDefaults: " + e.getMessage());
         }
     }
 
-    public static void setServerInfoTxt(String info){
-        try {
-            if(!info.isEmpty()) {
-                String[] components = info.split("::");
-                String protocol = components[2];
-                String filterInfo = CONFIG.getConfig().getProperty("filterProvider", "no_filter");
-                String provider = "System default";
-                String webFilter = "None";
-                if(filterInfo.equalsIgnoreCase("google"))
-                    provider = Util.capitalize(filterInfo);
-                else if(!filterInfo.equalsIgnoreCase("no_filter")){
-                    String[] fInfo = filterInfo.split("_");
-                    provider = Util.capitalize(fInfo[0]);
-                    webFilter = Util.capitalize(fInfo[1]) + " filter";
+    public static void setServerInfoTxt(String info) {
+        boolean isVpnOn = selectedConfig.equalsIgnoreCase("high") || (prefs.getBoolean("switchEnableVpn", false) && (vpnHost != null));
+        if (isVpnOn)
+            serverInfoTxt.setText(String.format("VPN mode ON\nConnected to : %s", vpnHost));
+        else {
+            try {
+                if (!info.isEmpty()) {
+                    String[] components = info.split("::");
+                    String protocol = components[2];
+                    String filterInfo = CONFIG.getConfig().getProperty("filterProvider", "no_filter");
+                    String provider = "System default";
+                    String webFilter = "None";
+                    if (filterInfo.equalsIgnoreCase("google"))
+                        provider = Util.capitalize(filterInfo);
+                    else if (!filterInfo.equalsIgnoreCase("no_filter")) {
+                        String[] fInfo = filterInfo.split("_");
+                        provider = Util.capitalize(fInfo[0]);
+                        webFilter = Util.capitalize(fInfo[1]) + " filter";
+                    }
+                    serverInfoTxt.setText(String.format("DNS provider: %s\nWeb Filter: %s\nProtocol: %s", provider, webFilter, protocol));
                 }
-                serverInfoTxt.setText(String.format("DNS provider: %s\nWeb Filter: %s\nProtocol: %s", provider, webFilter, protocol));
+            } catch (IOException e) {
+                Log.e(TAG, "setServerInfo: Unable to read local config\n" + e);
             }
-        } catch (IOException e){
-            Log.e(TAG, "setServerInfo: Unable to read local config\n"+e);
         }
     }
 
-    public static String getServerInfoTxt(){
+    public static String getServerInfoTxt() {
         return serverInfoTxt.getText().toString();
     }
 
