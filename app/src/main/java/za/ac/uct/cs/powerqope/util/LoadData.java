@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class LoadData {
 
@@ -21,7 +22,7 @@ public class LoadData {
 
             is.close();
 
-            data = new String(buffer, "UTF-8");
+            data = new String(buffer, StandardCharsets.UTF_8);
 
 
         } catch (IOException ex) {

@@ -40,24 +40,13 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.provider.Settings.Secure;
-import android.telephony.CellInfo;
-import android.telephony.CellInfoCdma;
-import android.telephony.CellInfoGsm;
-import android.telephony.CellInfoLte;
-import android.telephony.CellInfoWcdma;
 import android.telephony.NeighboringCellInfo;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.view.Display;
 import android.view.WindowManager;
 import android.webkit.WebView;
 
 import androidx.core.app.ActivityCompat;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -74,10 +63,8 @@ import java.util.List;
 
 import za.ac.uct.cs.powerqope.Config;
 import za.ac.uct.cs.powerqope.DeviceInfo;
-import za.ac.uct.cs.powerqope.DeviceProperty;
 import za.ac.uct.cs.powerqope.Logger;
 import za.ac.uct.cs.powerqope.R;
-import za.ac.uct.cs.powerqope.util.WebSocketConnector;
 import za.ac.uct.cs.powerqope.dns.DNSFilterService;
 
 
@@ -158,10 +145,10 @@ public class PhoneUtils {
      */
     private int temperature;
 
-    private BroadcastReceiver powerBroadcastReceiver;
-    private BroadcastReceiver networkBroadcastReceiver;
+    private final BroadcastReceiver powerBroadcastReceiver;
+    private final BroadcastReceiver networkBroadcastReceiver;
 
-    private int currentSignalStrength = NeighboringCellInfo.UNKNOWN_RSSI;
+    private final int currentSignalStrength = NeighboringCellInfo.UNKNOWN_RSSI;
 
     /**
      * For monitoring the current network connection type
@@ -176,19 +163,19 @@ public class PhoneUtils {
      * IP compatibility status
      */
     // Indeterministic type due to client side timer expired
-    private int IP_TYPE_CANNOT_DECIDE = 2;
+    private final int IP_TYPE_CANNOT_DECIDE = 2;
     // Cannot resolve the hostname or cannot reach the destination address
-    private int IP_TYPE_UNCONNECTIVITY = 1;
-    private int IP_TYPE_CONNECTIVITY = 0;
+    private final int IP_TYPE_UNCONNECTIVITY = 1;
+    private final int IP_TYPE_CONNECTIVITY = 0;
     /**
      * Domain name resolution status
      */
-    private int DN_UNKNOWN = 2;
-    private int DN_UNRESOLVABLE = 1;
-    private int DN_RESOLVABLE = 0;
+    private final int DN_UNKNOWN = 2;
+    private final int DN_UNRESOLVABLE = 1;
+    private final int DN_RESOLVABLE = 0;
     //server configuration port on M-Lab servers
-    private int portNum = 6003;
-    private int tcpTimeout = 3000;
+    private final int portNum = 6003;
+    private final int tcpTimeout = 3000;
 
     @SuppressLint("MissingPermission")
     protected PhoneUtils(Context context) {
@@ -216,7 +203,7 @@ public class PhoneUtils {
      */
     public static synchronized void setGlobalContext(Context newGlobalContext) {
         assert newGlobalContext != null;
-        assert singletonPhoneUtils == null;  // Should not yet be created
+        //assert singletonPhoneUtils == null;  // Should not yet be created
         // Not supposed to change the owner app
         assert globalContext == null || globalContext == newGlobalContext;
 

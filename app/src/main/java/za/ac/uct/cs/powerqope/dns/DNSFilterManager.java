@@ -66,7 +66,7 @@ public class DNSFilterManager extends ConfigurationAccess  {
 
 	public static final String VERSION = "1504700";
 
-	private static DNSFilterManager INSTANCE = new DNSFilterManager();
+	private static final DNSFilterManager INSTANCE = new DNSFilterManager();
 
 	static public boolean debug;
 	private static String filterReloadURL;
@@ -94,7 +94,7 @@ public class DNSFilterManager extends ConfigurationAccess  {
 	private static RemoteAccessServer remoteAccessManager ;
 
 
-	private static String DOWNLOADED_FF_PREFIX= "# Downloaded by personalDNSFilter at: ";
+	private static final String DOWNLOADED_FF_PREFIX= "# Downloaded by personalDNSFilter at: ";
 
 
 	protected Properties config = null;
@@ -127,7 +127,7 @@ public class DNSFilterManager extends ConfigurationAccess  {
 
 	private class AutoFilterUpdater implements Runnable {
 
-		private Object monitor;
+		private final Object monitor;
 		boolean stopRequest = false;
 		boolean running = false;
 
@@ -471,7 +471,7 @@ public class DNSFilterManager extends ConfigurationAccess  {
 				result.add(name);
 		}
 		Collections.sort(result);
-		return (String[]) result.toArray(new String[0]);
+		return result.toArray(new String[0]);
 	}
 
 

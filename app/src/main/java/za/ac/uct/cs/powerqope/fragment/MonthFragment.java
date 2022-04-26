@@ -33,7 +33,7 @@ public class MonthFragment extends Fragment {
     private final SimpleDateFormat SDF = new SimpleDateFormat("MMM dd, yyyy");
     private final DecimalFormat df = new DecimalFormat("#.##");
     final static String MEGABYTE = " MB", GIGABYTE = " GB";
-    private Handler vHandler = new Handler();
+    private final Handler vHandler = new Handler();
     private Thread dataUpdate;
     private TextView wTotal, mTotal, tTotal;
     private double total_wifi;
@@ -51,10 +51,10 @@ public class MonthFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_month, container, false);
 
 
-        wTotal = (TextView) rootView.findViewById(R.id.id_wifi);
-        mTotal = (TextView) rootView.findViewById(R.id.id_mobile);
-        tTotal = (TextView) rootView.findViewById(R.id.id_total);
-        recList = (RecyclerView) rootView.findViewById(R.id.cardList);
+        wTotal = rootView.findViewById(R.id.id_wifi);
+        mTotal = rootView.findViewById(R.id.id_mobile);
+        tTotal = rootView.findViewById(R.id.id_total);
+        recList = rootView.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

@@ -47,7 +47,9 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -515,7 +517,7 @@ public class Util {
 
       return new String[]{hostEntry, url};
     } catch (Exception e) {
-      throw new IOException("Cannot parse URI '" + uri + "'! - " + e.toString());
+      throw new IOException("Cannot parse URI '" + uri + "'! - " + e);
     }
   }
 
@@ -575,6 +577,16 @@ public class Util {
     if(!str.isEmpty())
       return str.substring(0, 1).toUpperCase() + str.substring(1);
     return null;
+  }
+
+  public static Double median(List<Double> values) {
+    int n = values.size();
+    if (n == 0)
+      return -1.0;
+    Collections.sort(values);
+    if (n % 2 == 0)
+      return (values.get(n / 2 - 1) + values.get(n / 2)) / 2;
+    return values.get(n / 2);
   }
 
 }

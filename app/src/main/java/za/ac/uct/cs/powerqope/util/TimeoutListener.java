@@ -24,7 +24,7 @@ package za.ac.uct.cs.powerqope.util;
 
 public interface TimeoutListener {
 	
-	public void timeoutNotification();
-	public long getTimoutTime();
+	void timeoutNotification();
+	long getTimoutTime();
 
 }

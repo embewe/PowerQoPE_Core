@@ -32,10 +32,10 @@ public class GraphAdapter extends RecyclerView.Adapter<GraphAdapter.DataViewHold
         public DataViewHolder(View itemView) {
             super(itemView);
 
-            vDate = (TextView) itemView.findViewById(R.id.id_date);
-            vWifi = (TextView) itemView.findViewById(R.id.id_wifi);
-            vMobile = (TextView) itemView.findViewById(R.id.mobile);
-            vTotal = (TextView) itemView.findViewById(R.id.total);
+            vDate = itemView.findViewById(R.id.id_date);
+            vWifi = itemView.findViewById(R.id.id_wifi);
+            vMobile = itemView.findViewById(R.id.mobile);
+            vTotal = itemView.findViewById(R.id.total);
         }
     }
 

@@ -6,9 +6,9 @@ import java.util.TimeZone;
 
 public class Stopwatch {
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-    private Calendar calendar = Calendar.getInstance();
-    private long startTime = System.currentTimeMillis();
+    private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+    private final Calendar calendar = Calendar.getInstance();
+    private final long startTime = System.currentTimeMillis();
 
     public Stopwatch() {
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));

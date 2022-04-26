@@ -33,9 +33,9 @@ import java.util.Set;
 
      private final static String IDX_VERSION = "1.0";
 
-     private ObjectPackagingManager objMgr;
+     private final ObjectPackagingManager objMgr;
 
-     private int slotCount;
+     private final int slotCount;
 
      private int count = 0;
 
@@ -87,7 +87,7 @@ import java.util.Set;
 
      @Override
      public boolean add(Object obj) {
-         boolean added = subsets[(int) (Math.abs( obj.hashCode() %  slotCount)) ].add(obj);
+         boolean added = subsets[Math.abs( obj.hashCode() %  slotCount)].add(obj);
          if (added) count ++;
          return added;
      }

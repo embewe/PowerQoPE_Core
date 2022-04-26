@@ -31,6 +31,13 @@
     <style name="ExoMediaButton.Rewind">
         <item name="android:visibility">gone</item>
     </style>
+    <style name="CustomTitle" parent="TextAppearance.ShowcaseView.Title">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <style name="CustomShowCaseTheme" parent="ShowcaseView.Light">
+        <item name="sv_backgroundColor">#E61E2020</item>
+        <item name="sv_detailTextAppearance">@style/CustomTitle</item>
+    </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

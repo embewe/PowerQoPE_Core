@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,7 +8,7 @@
     android:background="#292B2B"
     tools:context=".fragment.HomeFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -15,147 +16,451 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:gravity="center"
-                android:text="Welcome to personal Quality of Protection and Experience companion. Configure your desired level of protection and enjoy!"
-
-                android:textColor="@color/textColorSecondary"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
-
             >
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/radioButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="High Security"
-                    android:textColor="#ffff"
-                    android:textSize="17dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="33dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="High security cost information"
-                    android:textColor="@color/textColorSecondary" />
-
-                <RadioButton
-                    android:id="@+id/radioButton1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Medium Security"
-                    android:textColor="#ffff"
-                    android:textSize="17dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="33dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="High security cost information"
-                    android:textColor="@color/textColorSecondary" />
-
-                <RadioButton
-                    android:id="@+id/radioButton2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Low Security"
-                    android:textColor="#ffff"
-                    android:textSize="17dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="33dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="High security cost information"
-                    android:textColor="@color/textColorSecondary" />
-
-                <RadioButton
-                    android:id="@+id/radioButton3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Advanced Options"
-                    android:textColor="#ffff"
-                    android:textSize="17dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="33dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="select VPN, DNS, Filter, Cipher options"
-                    android:textColor="@color/textColorSecondary" />
-
-            </RadioGroup>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/click"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switch1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:scaleX="1.1"
-                android:scaleY="1.1"
-                android:thumb="@drawable/thumb2"
-                app:switchMinWidth="120dp"
-                app:track="@drawable/track" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="bottom">
-
             <LinearLayout
-                android:id="@+id/connected"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
+                android:orientation="vertical"
+                >
 
                 <TextView
-                    android:id="@+id/measurements"
+                    android:id="@+id/txtHead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="Welcome to personal Quality of Protection and Experience companion. Configure your desired level of protection and enjoy!"
+                    android:textColor="@color/textColorSecondary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+
+                >
+
+                <RadioGroup
+                    android:id="@+id/my_radio_group"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
-                    android:text="Using default DNS servers"
-                    android:textSize="18sp"
-                    android:textColor="#ffffff" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/linearRadiobutton"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                    <RadioButton
+                        android:id="@+id/radioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="High Security"
+                        android:textColor="#ffff"
+                        android:textSize="17dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:id="@+id/high_cost_info"
+                            android:layout_width="0dip"
+                            android:layout_weight="0.7"
+                            android:layout_height="wrap_content"
+                            android:background="#00FFFFFF"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Network quality"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Low"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/></LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Web and video experience"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Medium"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Private browsing"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="High"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/visual_high"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/low"></ImageView>
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/medium"></ImageView>
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/high"></ImageView>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linearRadiobutton1"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+                    <RadioButton
+                        android:id="@+id/radioButton1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Medium Security"
+                        android:textColor="#ffff"
+                        android:textSize="17dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:id="@+id/medium_cost_info"
+                            android:layout_width="0dip"
+                            android:layout_weight="0.7"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Network quality"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="High"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Web and video experience"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="High"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Private browsing"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Medium"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/>
+
+                                </LinearLayout>
+                            </LinearLayout></LinearLayout> <LinearLayout
+                        android:id="@+id/visual_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/high"></ImageView>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/high"></ImageView>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/medium"></ImageView>
+                    </LinearLayout></LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linearRadiobutton2"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+
+                    <RadioButton
+                        android:id="@+id/radioButton2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Low Security"
+                        android:textColor="#ffff"
+                        android:textSize="17dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:id="@+id/low_cost_info"
+                            android:layout_width="0dip"
+                            android:layout_weight="0.7"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Network quality"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="High"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Web and video experience"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="High"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="33dp"
+                                    android:text="Private browsing"
+                                    android:textColor="@color/textColorSecondary" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:gravity="right">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Low"
+                                        android:layout_marginRight="5dp"
+                                        android:textColor="@color/textColorSecondary"/>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout><LinearLayout
+                        android:id="@+id/visual_low"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/high"></ImageView>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/high"></ImageView>
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/low"></ImageView>
+                    </LinearLayout></LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/linearRadiobutton3"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal" />
+
+                    <RadioButton
+                        android:id="@+id/radioButton3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Advanced Options"
+                        android:textColor="#ffff"
+                        android:textSize="17dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="33dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="select VPN, DNS, Filter, Cipher options"
+                        android:textColor="@color/textColorSecondary" />
+
+                </RadioGroup>
 
 
             </LinearLayout>
-        </RelativeLayout>
-    </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/click"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                >
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:scaleX="1.1"
+                    android:scaleY="1.1"
+                    android:thumb="@drawable/thumb2"
+                    app:switchMinWidth="120dp"
+                    app:track="@drawable/track" />
+
+            </LinearLayout>
+        </LinearLayout>
 
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/connected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true">
+
+
+            <TextView
+                android:id="@+id/measurements"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:text="Using default DNS servers"
+                android:textSize="18sp"
+                android:textColor="#ffffff" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>

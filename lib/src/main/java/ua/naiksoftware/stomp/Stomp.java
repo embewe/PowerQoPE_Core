@@ -1,6 +1,6 @@
 package ua.naiksoftware.stomp;
 
-import androidx.annotation.NonNull;;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.Map;
@@ -60,7 +60,7 @@ public class Stomp {
             return createStompClient(new OkHttpConnectionProvider(uri, connectHttpHeaders, (okHttpClient == null) ? new OkHttpClient() : okHttpClient));
         }
 
-        throw new IllegalArgumentException("ConnectionProvider type not supported: " + connectionProvider.toString());
+        throw new IllegalArgumentException("ConnectionProvider type not supported: " + connectionProvider);
     }
 
     private static StompClient createStompClient(ua.naiksoftware.stomp.provider.ConnectionProvider connectionProvider) {

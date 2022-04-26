@@ -17,15 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".adapter.VideoAdapter"></activity>
-        <activity android:name=".utils.Video" />
         <activity android:name=".MainActivity"/>
         <activity android:name=".PrivateDNSActivity" />
         <activity android:name=".VPNSettingsActivity" />
         <activity android:name=".AdvancedActivity"
-                  android:alwaysRetainTaskState="true"
+            android:alwaysRetainTaskState="true"
 
-                    />
+            />
         <activity android:name=".activity.SpeedTestActivity" />
         <activity android:name=".PlayerActivity" />
         <activity android:name=".WelcomeActivity">
@@ -35,10 +33,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <service
+            android:name="de.blinkt.openvpn.core.OpenVPNService"
+            android:permission="android.permission.BIND_VPN_SERVICE">
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+            </intent-filter>
+        </service>
         <service
             android:name="za.ac.uct.cs.powerqope.dns.DNSFilterService"
-            android:label="personalDNSfilterService"
+            android:label="PowerQoPE"
             android:permission="android.permission.BIND_VPN_SERVICE">
             <intent-filter>
                 <action android:name="android.net.VpnService" />

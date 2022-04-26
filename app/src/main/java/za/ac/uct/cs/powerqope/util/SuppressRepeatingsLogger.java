@@ -6,7 +6,7 @@ import java.util.Map;
 public class SuppressRepeatingsLogger implements LoggerInterface {
 	LoggerInterface nestedLogger;
 	private String lastLog = "";
-	private HashMap<String, Long> lastLogs = new HashMap<String, Long>();
+	private final HashMap<String, Long> lastLogs = new HashMap<String, Long>();
 	private long timeRepeat = 0;
 	private long lastCleanup = 0;
 

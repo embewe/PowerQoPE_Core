@@ -29,7 +29,7 @@ package za.ac.uct.cs.powerqope.util;
  public class ExecutionEnvironment implements ExecutionEnvironmentInterface {
 	
 	private static ExecutionEnvironmentInterface m_Env;
-	private static ExecutionEnvironmentInterface m_default = new ExecutionEnvironment();
+	private static final ExecutionEnvironmentInterface m_default = new ExecutionEnvironment();
 	
 	
 	public static void setEnvironment(ExecutionEnvironmentInterface env) {

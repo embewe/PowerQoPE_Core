@@ -29,8 +29,8 @@ public class HeartBeatTask {
     private transient Disposable clientSendHeartBeatTask;
     private transient Disposable serverCheckHeartBeatTask;
 
-    private FailedListener failedListener;
-    private SendCallback sendCallback;
+    private final FailedListener failedListener;
+    private final SendCallback sendCallback;
 
     public HeartBeatTask(SendCallback sendCallback, @Nullable FailedListener failedListener) {
         this.failedListener = failedListener;

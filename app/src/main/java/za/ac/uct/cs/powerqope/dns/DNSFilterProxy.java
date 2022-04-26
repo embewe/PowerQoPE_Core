@@ -83,8 +83,8 @@ public class DNSFilterProxy implements Runnable {
 	public static void main(String[] args) throws Exception {
 		class StandaloneEnvironment extends ExecutionEnvironment  {
 			
-			boolean debug = false;
-			boolean debugInit = false;
+			final boolean debug = false;
+			final boolean debugInit = false;
 
 			@Override
 			public void onReload() {

@@ -27,15 +27,15 @@ package za.ac.uct.cs.powerqope.util;
 
  public interface ExecutionEnvironmentInterface {
 
-	 public int getEnvironmentID();
-	 public String getEnvironmentVersion();
-	 public void wakeLock();
-	 public void releaseWakeLock();
-	 public void releaseAllWakeLocks();
-	 public String getWorkDir();
-	 public void onReload()  throws IOException;
-	 public InputStream getAsset(String path) throws IOException;
-	 public boolean hasNetwork();
-	 public boolean protectSocket(Object socket, int type);
-	 public void migrateConfig() throws IOException;
+	 int getEnvironmentID();
+	 String getEnvironmentVersion();
+	 void wakeLock();
+	 void releaseWakeLock();
+	 void releaseAllWakeLocks();
+	 String getWorkDir();
+	 void onReload()  throws IOException;
+	 InputStream getAsset(String path) throws IOException;
+	 boolean hasNetwork();
+	 boolean protectSocket(Object socket, int type);
+	 void migrateConfig() throws IOException;
 }

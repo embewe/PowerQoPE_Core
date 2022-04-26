@@ -29,7 +29,7 @@ import java.nio.IntBuffer;
 
 public class UDPPacket extends IPPacket {
 
-	private IntBuffer udpHeader;
+	private final IntBuffer udpHeader;
 
 	public UDPPacket(byte[] packet, int offs, int len) {
 		super(packet, offs, len);

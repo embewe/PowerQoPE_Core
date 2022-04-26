@@ -55,7 +55,7 @@ public class DNSServer {
     public static final int DOT = 2; // DNS over TLS
     public static final int DOH = 3; // DNS of HTTPS
 
-    private static DNSServer INSTANCE = new DNSServer(null,0,0);
+    private static final DNSServer INSTANCE = new DNSServer(null,0,0);
 
     protected static Proxy proxy = Proxy.NO_PROXY;
 
@@ -294,8 +294,8 @@ public class DNSServer {
 
 class UDP extends DNSServer {
 
-    private static int UDP_RETRY_CNT = 10;
-    private static HashSet  sessions = new HashSet<DatagramSocket>();
+    private static final int UDP_RETRY_CNT = 10;
+    private static final HashSet  sessions = new HashSet<DatagramSocket>();
 
     protected UDP(InetAddress address, int port, int timeout) {
         super(address, port, timeout);
@@ -395,7 +395,7 @@ class TCP extends DNSServer {
             } catch (EOFException eof) {
                 con.release(false);
                 if (i == 1)
-                    throw new IOException ("EOF when reading from "+this.toString(),eof); // retried already once, now throw exception
+                    throw new IOException ("EOF when reading from "+ this,eof); // retried already once, now throw exception
             } catch (IOException eio) {
                 con.release(false);
                 throw eio;
@@ -468,7 +468,7 @@ class DoH extends DNSServer {
             } catch (EOFException eof) {
                 con.release(false);
                 if (i == 1)
-                    throw new IOException ("EOF when reading from "+this.toString(),eof); // retried already once, now throw exception
+                    throw new IOException ("EOF when reading from "+ this,eof); // retried already once, now throw exception
             } catch (IOException eio) {
                 con.release(false);
                 throw eio;

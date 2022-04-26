@@ -65,8 +65,8 @@ public class BlockedHosts implements Set {
 		}
 	}
 
-	private static ObjectPackagingManager PACK_MGR = new MyPackagingManager();
-	private static Object NOT_NULL = new Object();
+	private static final ObjectPackagingManager PACK_MGR = new MyPackagingManager();
+	private static final Object NOT_NULL = new Object();
 	private LRUCache okCache;
 	private LRUCache filterListCache;
 	private Hashtable hostsFilterOverRule;
@@ -162,7 +162,7 @@ public class BlockedHosts implements Set {
 			blockedPatterns = new Vector<String[]>();
 			String entry;
 			while ( (entry = fin.readLine()) != null) {
-				blockedPatterns.addElement( ((String)entry).trim().split("\\*", -1));
+				blockedPatterns.addElement( entry.trim().split("\\*", -1));
 			}
 			fin.close();
 		}
@@ -225,7 +225,7 @@ public class BlockedHosts implements Set {
 
 
 	public void clearCache(String host) {
-		long hostHash = Util.getLongStringHash((String) host.toLowerCase());
+		long hostHash = Util.getLongStringHash(host.toLowerCase());
 		okCache.remove(hostHash);
 		filterListCache.remove(hostHash);
 	}
@@ -237,7 +237,7 @@ public class BlockedHosts implements Set {
 			if (((String) host).indexOf("*") != -1)
 				throw new IOException("Wildcard not supported for update:" + host);
 
-			long hostHash = Util.getLongStringHash((String) ((String) host).toLowerCase());
+			long hostHash = Util.getLongStringHash(((String) host).toLowerCase());
 			okCache.remove(hostHash);
 			filterListCache.remove(hostHash);
 
@@ -251,7 +251,7 @@ public class BlockedHosts implements Set {
 	@Override
 	public boolean add(Object host) {
 		if (((String) host).indexOf("*") == -1)
-			return blockedHostsHashes.add(Util.getLongStringHash((String) ((String) host).toLowerCase()));
+			return blockedHostsHashes.add(Util.getLongStringHash(((String) host).toLowerCase()));
 		else { //Pattern
 			getInitializedPatternStruct().addElement( ((String)host).trim().toLowerCase().split("\\*", -1));
 			return true;

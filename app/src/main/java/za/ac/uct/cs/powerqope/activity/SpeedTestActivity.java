@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -37,7 +38,7 @@ import za.ac.uct.cs.powerqope.utils.HttpUploadTest;
 import za.ac.uct.cs.powerqope.utils.PingTest;
 
 public class SpeedTestActivity extends AppCompatActivity {
-
+    private static final String TAG = "SpeedTestActivity";
     static int position = 0;
     static int lastPosition = 0;
     GetSpeedTestHostsHandler getSpeedTestHostsHandler = null;
@@ -55,7 +56,7 @@ public class SpeedTestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speed_test);
-        final Button startButton = (Button) findViewById(R.id.startButton);
+        final Button startButton = findViewById(R.id.startButton);
         final DecimalFormat dec = new DecimalFormat("#.##");
         startButton.setText("Begin Test");
         mDatabase = openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
@@ -82,10 +83,10 @@ public class SpeedTestActivity extends AppCompatActivity {
 
                 new Thread(new Runnable() {
                     RotateAnimation rotate;
-                    ImageView barImageView = (ImageView) findViewById(R.id.barImageView);
-                    TextView pingTextView = (TextView) findViewById(R.id.pingTextView);
-                    TextView downloadTextView = (TextView) findViewById(R.id.downloadTextView);
-                    TextView uploadTextView = (TextView) findViewById(R.id.uploadTextView);
+                    final ImageView barImageView = findViewById(R.id.barImageView);
+                    final TextView pingTextView = findViewById(R.id.pingTextView);
+                    final TextView downloadTextView = findViewById(R.id.downloadTextView);
+                    final TextView uploadTextView = findViewById(R.id.uploadTextView);
 
                     @Override
                     public void run() {
@@ -168,7 +169,7 @@ public class SpeedTestActivity extends AppCompatActivity {
                         });
 
                         //Init Ping graphic
-                        final LinearLayout chartPing = (LinearLayout) findViewById(R.id.chartPing);
+                        final LinearLayout chartPing = findViewById(R.id.chartPing);
                         XYSeriesRenderer pingRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine pingFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
                         pingFill.setColor(Color.parseColor("#4d5a6a"));
@@ -189,7 +190,7 @@ public class SpeedTestActivity extends AppCompatActivity {
                         multiPingRenderer.addSeriesRenderer(pingRenderer);
 
                         //Init Download graphic
-                        final LinearLayout chartDownload = (LinearLayout) findViewById(R.id.chartDownload);
+                        final LinearLayout chartDownload = findViewById(R.id.chartDownload);
                         XYSeriesRenderer downloadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine downloadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
                         downloadFill.setColor(Color.parseColor("#4d5a6a"));
@@ -210,7 +211,7 @@ public class SpeedTestActivity extends AppCompatActivity {
                         multiDownloadRenderer.addSeriesRenderer(downloadRenderer);
 
                         //Init Upload graphic
-                        final LinearLayout chartUpload = (LinearLayout) findViewById(R.id.chartUpload);
+                        final LinearLayout chartUpload = findViewById(R.id.chartUpload);
                         XYSeriesRenderer uploadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine uploadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
                         uploadFill.setColor(Color.parseColor("#4d5a6a"));

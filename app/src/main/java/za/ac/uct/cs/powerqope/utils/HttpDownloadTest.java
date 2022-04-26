@@ -46,7 +46,7 @@ public class HttpDownloadTest extends Thread {
     public void setInstantDownloadRate(int downloadedByte, double elapsedTime) {
 
         if (downloadedByte >= 0) {
-            this.instantDownloadRate = round((Double) (((downloadedByte * 8) / (1000 * 1000)) / elapsedTime), 2);
+            this.instantDownloadRate = round(((downloadedByte * 8) / (1000 * 1000)) / elapsedTime, 2);
         } else {
             this.instantDownloadRate = 0.0;
         }

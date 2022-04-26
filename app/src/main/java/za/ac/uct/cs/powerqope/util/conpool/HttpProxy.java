@@ -33,7 +33,7 @@ import za.ac.uct.cs.powerqope.util.http.HttpHeader;
 
 public class HttpProxy extends Proxy {
 	private String authString;
-	private InetSocketAddress proxyAdr;	
+	private final InetSocketAddress proxyAdr;
 
 	public HttpProxy(InetSocketAddress adr, String authString) {
 		super(Type.HTTP, adr);

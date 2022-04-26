@@ -38,15 +38,15 @@ import java.util.RandomAccess;
 
  public class PackedSortedList implements List, RandomAccess {
 
-     private boolean keepInMemory;
+     private final boolean keepInMemory;
      private boolean persistentOutdated;
      private boolean loaded = false;
-     private int object_size;
+     private final int object_size;
      private byte[] datapack = null;
      private int count = 0;
      private File persistedPackFile;
      private RandomAccessFile persistedPackData = null;
-     private ObjectPackagingManager objMgr;
+     private final ObjectPackagingManager objMgr;
 
 
      public PackedSortedList(int size, ObjectPackagingManager objMgr) {

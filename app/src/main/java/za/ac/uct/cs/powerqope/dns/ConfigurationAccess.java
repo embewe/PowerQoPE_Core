@@ -53,9 +53,9 @@ public abstract class ConfigurationAccess {
 
     abstract public String getVersion() throws IOException;
 
-    abstract public int openConnectionsCount()  throws IOException;;
+    abstract public int openConnectionsCount()  throws IOException;
 
-    abstract public String getLastDNSAddress()  throws IOException;;
+    abstract public String getLastDNSAddress()  throws IOException;
 
     abstract public void restart() throws IOException ;
 

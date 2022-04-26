@@ -48,9 +48,9 @@ public class AndroidEnvironment implements ExecutionEnvironmentInterface {
     private static final String TAG = "AndroidEnvironment";
 
     private static Context ctx = null;
-    private static AndroidEnvironment INSTANCE = new AndroidEnvironment();
+    private static final AndroidEnvironment INSTANCE = new AndroidEnvironment();
     private static String WORKDIR;
-    private static Stack wakeLooks = new Stack();
+    private static final Stack wakeLooks = new Stack();
 
     static {
         ExecutionEnvironment.setEnvironment(INSTANCE);

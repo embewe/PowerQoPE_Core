@@ -235,7 +235,7 @@ public class HttpHeader {
 			String key = reqparamSequence[i];
 			String value = (String) mapping.remove(key.toUpperCase());
 			if (value != null) {
-				if (useProxy && key.toUpperCase().equals("CONNECTION"))
+				if (useProxy && key.equalsIgnoreCase("CONNECTION"))
 					key = "Proxy-Connection";
 				if (value.length() > 0) {
 					appendValueToHeaderString(headerString, key, value);
@@ -248,11 +248,10 @@ public class HttpHeader {
 			String key = (String) keyIt.next();
 			String value = (String) mapping.remove(key.toUpperCase());
 			if (value != null) {
-				if (!useProxy && key.toUpperCase().equals("PROXY-CONNECTION"))
+				if (!useProxy && key.equalsIgnoreCase("PROXY-CONNECTION"))
 					key = "Connection";
 				if (value.length() > 0) {
 					appendValueToHeaderString(headerString, key, value);
-					;
 				} else
 					headerString.append(key + ":\r\n");
 			}
@@ -283,10 +282,7 @@ public class HttpHeader {
 		String value = getValue("Connection");
 		if (value == null)
 			return false;
-		else if (value.equalsIgnoreCase("close"))
-			return true;
-		else
-			return false;
+		else return value.equalsIgnoreCase("close");
 
 	}
 

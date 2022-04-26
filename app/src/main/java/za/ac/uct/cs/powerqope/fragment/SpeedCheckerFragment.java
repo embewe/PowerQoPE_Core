@@ -90,10 +90,10 @@ public class SpeedCheckerFragment extends Fragment {
 
                 new Thread(new Runnable() {
                     RotateAnimation rotate;
-                    ImageView barImageView = getView().findViewById(R.id.barImageView);
-                    TextView pingTextView =   getView().findViewById(R.id.pingTextView);
-                    TextView downloadTextView =  getView().findViewById(R.id.downloadTextView);
-                    TextView uploadTextView =  getView().findViewById(R.id.uploadTextView);
+                    final ImageView barImageView = getView().findViewById(R.id.barImageView);
+                    final TextView pingTextView =   getView().findViewById(R.id.pingTextView);
+                    final TextView downloadTextView =  getView().findViewById(R.id.downloadTextView);
+                    final TextView uploadTextView =  getView().findViewById(R.id.uploadTextView);
 
                     @Override
                     public void run() {
@@ -197,7 +197,7 @@ public class SpeedCheckerFragment extends Fragment {
                         multiPingRenderer.addSeriesRenderer(pingRenderer);
 
                         //Init Download graphic
-                        final LinearLayout chartDownload = (LinearLayout)  getView().findViewById(R.id.chartDownload);
+                        final LinearLayout chartDownload = getView().findViewById(R.id.chartDownload);
                         XYSeriesRenderer downloadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine downloadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
                         downloadFill.setColor(Color.parseColor("#4d5a6a"));
@@ -218,7 +218,7 @@ public class SpeedCheckerFragment extends Fragment {
                         multiDownloadRenderer.addSeriesRenderer(downloadRenderer);
 
                         //Init Upload graphic
-                        final LinearLayout chartUpload = (LinearLayout)  getView().findViewById(R.id.chartUpload);
+                        final LinearLayout chartUpload = getView().findViewById(R.id.chartUpload);
                         XYSeriesRenderer uploadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine uploadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
                         uploadFill.setColor(Color.parseColor("#4d5a6a"));

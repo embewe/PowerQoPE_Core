@@ -32,11 +32,11 @@ import java.io.PrintStream;
 
 public class FileLogger implements LoggerInterface, Runnable {
 
-	private String logFolderPath;
-	private String name;
-	private long slotSize;
-	private int slotCount;
-	private String header;
+	private final String logFolderPath;
+	private final String name;
+	private final long slotSize;
+	private final int slotCount;
+	private final String header;
 	private long curSlotSize = 0;
 	private int curSlot = 0;
 	private OutputStream fout = null;

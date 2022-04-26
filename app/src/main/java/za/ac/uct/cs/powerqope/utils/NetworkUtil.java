@@ -58,7 +58,7 @@ public class NetworkUtil {
             int level = WifiManager.calculateSignalLevel(rssi, 10);
             int percentage = (int) ((level / 9.0) * 100);
             connInfo.add(info.getSSID());
-            connInfo.add(Integer.toString(percentage) + " %");
+            connInfo.add(percentage + " %");
             return connInfo;
 
         } else if (network_status.equals("mobile_enabled")) {

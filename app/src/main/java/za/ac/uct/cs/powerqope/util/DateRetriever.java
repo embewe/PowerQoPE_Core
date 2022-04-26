@@ -27,8 +27,8 @@ import java.util.Calendar;
 
  public class DateRetriever implements Runnable {
 
-     private static int PRECISION_MILLIS = 1000;
-     private static DateRetriever RETRIEVER_INSTANCE = new DateRetriever();
+     private static final int PRECISION_MILLIS = 1000;
+     private static final DateRetriever RETRIEVER_INSTANCE = new DateRetriever();
 
      private Thread _thread = null;
      private String current;

@@ -7,10 +7,10 @@ import java.io.OutputStream;
 
 public class PaddingCipherOutputStream extends OutputStream {
 	
-	private ByteArrayOutputStream bytesBuffer;
+	private final ByteArrayOutputStream bytesBuffer;
 	private DataOutputStream lowerOut;
-	private OutputStream underlying;
-	private int bufSize;
+	private final OutputStream underlying;
+	private final int bufSize;
 	
 	
 	public PaddingCipherOutputStream (OutputStream underlying, int bufSize) throws IOException {
@@ -39,7 +39,7 @@ public class PaddingCipherOutputStream extends OutputStream {
 	}
 	
 	@Override
-	public void write(byte b[], int off, int len) throws IOException {
+	public void write(byte[] b, int off, int len) throws IOException {
 		init();
 		bytesBuffer.write(b,off,len);
 		bytesBuffer.flush();
@@ -48,7 +48,7 @@ public class PaddingCipherOutputStream extends OutputStream {
 	}
 	
 	@Override
-	public void write(byte b[]) throws IOException {
+	public void write(byte[] b) throws IOException {
 		write(b,0,b.length);		
 	}
 	

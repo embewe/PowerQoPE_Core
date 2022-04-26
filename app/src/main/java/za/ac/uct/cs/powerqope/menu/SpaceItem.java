@@ -10,7 +10,7 @@ import za.ac.uct.cs.powerqope.menu.DrawerItem;
 
 public class SpaceItem extends DrawerItem<SpaceItem.ViewHolder> {
 
-    private int spaceDp;
+    private final int spaceDp;
 
     public SpaceItem(int spaceDp) {
         this.spaceDp = spaceDp;

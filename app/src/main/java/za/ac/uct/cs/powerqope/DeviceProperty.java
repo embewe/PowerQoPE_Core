@@ -61,8 +61,8 @@ public class DeviceProperty {
   }
   
   public static class GeoLocation {
-    private double longitude;
-    private double latitude;
+    private final double longitude;
+    private final double latitude;
     
     public GeoLocation(double longtitude, double latitude) {
       this.longitude = longtitude;

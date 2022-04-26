@@ -34,8 +34,8 @@ public class RemoteAccessServer implements Runnable {
     private static int sessionId=0;
 
     boolean stopped = false;
-    private ServerSocket server;
-    private HashMap sessions = new HashMap<Integer, RemoteSession>();
+    private final ServerSocket server;
+    private final HashMap sessions = new HashMap<Integer, RemoteSession>();
 
 
     public RemoteAccessServer(int port, String keyphrase) throws IOException{
@@ -104,7 +104,7 @@ public class RemoteAccessServer implements Runnable {
                     throw e;
                 }
             } catch (IOException e) {
-                Log.i(TAG,"RemoteServerException: "+e.toString());
+                Log.i(TAG,"RemoteServerException: "+ e);
             }
         }
     }
@@ -192,11 +192,11 @@ public class RemoteAccessServer implements Runnable {
                         heartBeatConfirmed();
                     else executeAction(action);
                 } catch (ConfigurationAccess.ConfigurationAccessException e) {
-                    Log.i(TAG,"RemoteServer Exception processing "+action+"! " + e.toString());
+                    Log.i(TAG,"RemoteServer Exception processing "+action+"! " + e);
                 } catch (IOException e) {
                     if (!doReconnect) {
                         if (!killed) {
-                            Log.i(TAG,"Exception during RemoteServer Session read! " + e.toString());
+                            Log.i(TAG,"Exception during RemoteServer Session read! " + e);
                             killSession();
                             break;
                         }
@@ -343,7 +343,7 @@ public class RemoteAccessServer implements Runnable {
 
                         } catch (IOException e) {
                             killSession();
-                            Log.i(TAG,"Exception during remote logging! " + e.toString());
+                            Log.i(TAG,"Exception during remote logging! " + e);
                         }
                     }
                 }
@@ -357,7 +357,7 @@ public class RemoteAccessServer implements Runnable {
                 public void logException(Exception e) {
                     StringWriter str = new StringWriter();
                     e.printStackTrace(new PrintWriter(str));
-                    log(str.toString()+"\n");
+                    log(str +"\n");
                 }
 
                 @Override

@@ -75,15 +75,15 @@ public class DNSFilterService extends VpnService {
 
     private static final String TAG = "DNSFilterService";
 
-    private static String VIRTUALDNS_IPV4 = "10.10.10.10";
-    private static String VIRTUALDNS_IPV6 = "fdc8:1095:91e1:aaaa:aaaa:aaaa:aaaa:aaa1";
-    private static String ADDRESS_IPV4 = "10.0.2.15";
-    private static String ADDRESS_IPV6 = "fdc8:1095:91e1:aaaa:aaaa:aaaa:aaaa:aaa2";
+    private static final String VIRTUALDNS_IPV4 = "10.10.10.10";
+    private static final String VIRTUALDNS_IPV6 = "fdc8:1095:91e1:aaaa:aaaa:aaaa:aaaa:aaa1";
+    private static final String ADDRESS_IPV4 = "10.0.2.15";
+    private static final String ADDRESS_IPV6 = "fdc8:1095:91e1:aaaa:aaaa:aaaa:aaaa:aaa2";
 
     public static Intent SERVICE = null;
 
-    private static String START_DNSCRYPTPROXY = "dnscrypt-proxy";
-    private static String KILL_DNSCRYPTPROXY = "killall dnscrypt-proxy";
+    private static final String START_DNSCRYPTPROXY = "dnscrypt-proxy";
+    private static final String KILL_DNSCRYPTPROXY = "killall dnscrypt-proxy";
 
     public static DNSFilterManager DNSFILTER = null;
     public static DNSFilterProxy DNSFILTERPROXY = null;
@@ -295,7 +295,6 @@ public class DNSFilterService extends VpnService {
 
             try {
                 int max_resolvers = Integer.parseInt(DNSFilterManager.getInstance().getConfig().getProperty("maxResolverCount", "100"));
-                ;
                 while (!stopped) {
                     byte[] data = new byte[DNSServer.getBufSize()];
                     int length = in.read(data);
@@ -342,7 +341,7 @@ public class DNSFilterService extends VpnService {
                                     new Thread(new DNSResolver(parsedPacket, out)).start();
                             }
                         } catch (IOException e) {
-                            Log.i(TAG, "IOEXCEPTION: " + e.toString());
+                            Log.i(TAG, "IOEXCEPTION: " + e);
                         } catch (Exception e) {
                             Log.e(TAG, e.getMessage());
                         }
@@ -411,7 +410,7 @@ public class DNSFilterService extends VpnService {
         try {
             HashSet<String> result = new HashSet<String>();
             Class<?> SystemProperties = Class.forName("android.os.SystemProperties");
-            Method method = SystemProperties.getMethod("get", new Class[]{String.class});
+            Method method = SystemProperties.getMethod("get", String.class);
 
             for (String name : new String[]{"net.dns1", "net.dns2", "net.dns3", "net.dns4"}) {
                 String value = (String) method.invoke(null, name);
@@ -521,7 +520,7 @@ public class DNSFilterService extends VpnService {
                             throw new IOException("Port 53 not allowed when running in root mode! Use DoT or DoH!");
                         dnsAdrs.add(DNSServer.getInstance().createDNSServer(dnsEntry, timeout));
                     } catch (Exception e) {
-                        Log.i(TAG, "Cannot create DNS server for " + dnsEntry + "!\n" + e.toString());
+                        Log.i(TAG, "Cannot create DNS server for " + dnsEntry + "!\n" + e);
                         Log.i(TAG, "Invalid DNS server entry: '" + dnsEntry + "'");
                     }
                 }
@@ -794,7 +793,7 @@ public class DNSFilterService extends VpnService {
             runOSCommand(false, "iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-port 5300");
             DNS_PROXY_PORT_IS_REDIRECTED = true;
         } catch (Exception e) {
-            Log.i(TAG, "Exception during setting port redirection:" + e.toString());
+            Log.i(TAG, "Exception during setting port redirection:" + e);
 
         }
     }
@@ -806,7 +805,7 @@ public class DNSFilterService extends VpnService {
             runOSCommand(false, "iptables -t nat -D PREROUTING -p udp --dport 53 -j REDIRECT --to-port 5300");
             DNS_PROXY_PORT_IS_REDIRECTED = false;
         } catch (Exception e) {
-            Log.i(TAG, "Exception when clearing port redirection:" + e.toString());
+            Log.i(TAG, "Exception when clearing port redirection:" + e);
 
         }
     }
@@ -933,7 +932,7 @@ public class DNSFilterService extends VpnService {
         else {
             if (instance.manageDNSCryptProxy && appExit)
                 try {
-                    instance.runOSCommand(false, KILL_DNSCRYPTPROXY);
+                    runOSCommand(false, KILL_DNSCRYPTPROXY);
                     instance.dnsCryptProxyStartTriggered = false;
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());

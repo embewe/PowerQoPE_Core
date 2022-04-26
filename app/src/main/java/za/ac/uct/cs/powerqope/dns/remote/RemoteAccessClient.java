@@ -38,8 +38,8 @@ public class RemoteAccessClient extends ConfigurationAccess implements TimeoutLi
     static final int HEART_BEAT = 6;
 
 
-    private String host;
-    private int port;
+    private final String host;
+    private final int port;
     private Socket ctrlcon;
     private InputStream in;
     private OutputStream out;
@@ -103,7 +103,7 @@ public class RemoteAccessClient extends ConfigurationAccess implements TimeoutLi
         try {
              connect();
         } catch (IOException e){
-             Log.i(TAG, "Reconnect failed:"+e.toString());
+             Log.i(TAG, "Reconnect failed:"+ e);
              valid = false;
         }
     }
@@ -139,7 +139,7 @@ public class RemoteAccessClient extends ConfigurationAccess implements TimeoutLi
             con.setSoTimeout(0);
             return new Object[] {id, con, in, out};
         } catch (IOException e) {
-            Log.i(TAG, "Exception during initConnection(): "+e.toString());
+            Log.i(TAG, "Exception during initConnection(): "+ e);
            if (con != null)
                Util.closeSocket(con);
             throw e;
@@ -205,7 +205,7 @@ public class RemoteAccessClient extends ConfigurationAccess implements TimeoutLi
                 out.write("releaseConfiguration()".getBytes());
                 out.flush();
             } catch (IOException e) {
-                Log.i(TAG, "Exception during remote configuration release: " + e.toString());
+                Log.i(TAG, "Exception during remote configuration release: " + e);
                 Util.closeSocket(ctrlcon);
             }
         }
@@ -579,7 +579,7 @@ public class RemoteAccessClient extends ConfigurationAccess implements TimeoutLi
                 }
             } catch (Exception e){
                 if (!stopped) {
-                    Log.i(TAG, "Exception during RemoteStream read! " + e.toString());
+                    Log.i(TAG, "Exception during RemoteStream read! " + e);
                     closeConnectionReconnect();
                 }
             }
@@ -592,7 +592,7 @@ public class RemoteAccessClient extends ConfigurationAccess implements TimeoutLi
                     out.flush();
                 }
             } catch (IOException e) {
-                Log.i(TAG, "Exception during confirmHeartBeat()! " + e.toString());
+                Log.i(TAG, "Exception during confirmHeartBeat()! " + e);
                 closeConnectionReconnect();
             }
         }
@@ -622,7 +622,7 @@ public class RemoteAccessClient extends ConfigurationAccess implements TimeoutLi
                         out.write("releaseConfiguration()".getBytes());
                         out.flush();
                     } catch (IOException e) {
-                        Log.i(TAG, "Exception during remote configuration release: " + e.toString());
+                        Log.i(TAG, "Exception during remote configuration release: " + e);
                     }
                     Util.closeSocket(streamCon);
                 }

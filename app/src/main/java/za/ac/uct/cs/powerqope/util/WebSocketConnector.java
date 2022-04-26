@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,11 +18,15 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.Vector;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
+import de.blinkt.openvpn.VpnProfile;
+import de.blinkt.openvpn.core.ConfigParser;
+import de.blinkt.openvpn.core.OpenVPNService;
+import de.blinkt.openvpn.core.ProfileManager;
+import de.blinkt.openvpn.core.VPNLaunchHelper;
 import io.reactivex.CompletableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -37,6 +40,7 @@ import za.ac.uct.cs.powerqope.Config;
 import za.ac.uct.cs.powerqope.SubscriptionCallbackInterface;
 import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
 import za.ac.uct.cs.powerqope.dns.DNSFilterService;
+import za.ac.uct.cs.powerqope.fragment.HomeFragment;
 
 public class WebSocketConnector {
 
@@ -45,7 +49,7 @@ public class WebSocketConnector {
     private StompClient mStompClient;
     private CompositeDisposable compositeDisposable;
     private static WebSocketConnector instance;
-    private ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
+    private final ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
 
     private WebSocketConnector() {
     }
@@ -68,26 +72,35 @@ public class WebSocketConnector {
         }};
     }
 
-    public void modifyConfig(JSONObject filter, JSONObject cipher) {
+    private boolean getVpnStatus(String secLevel){
+        SharedPreferences prefs = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        String vpnHost = prefs.getString("selVpnHost", null);
+        return secLevel.equalsIgnoreCase("high") ||
+                (secLevel.equalsIgnoreCase("advanced") && prefs.getBoolean("switchEnableVpn", false) && (vpnHost != null));
+    }
+
+    public void modifyConfig(JSONObject filter, JSONObject vpn, boolean advancedConfig) {
         try {
             boolean changed = false;
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             String ln;
             String filterValue;
             String secLevel;
+            String secLevelBefore = CONFIG.getConfig().getProperty("secLevel", "default");
+            boolean wasVpnOnBefore = getVpnStatus(secLevelBefore);
             switch (filter.getString("dnsType")) {
                 case "dot":
                     filterValue = filter.getString("ipAddress") + "::853::DoT";
-                    secLevel = (cipher == null ? "advanced" : "medium");
+                    secLevel = (advancedConfig ? "advanced" : "medium");
                     break;
                 case "doh":
                     String url = filter.getString("url");
                     filterValue = filter.getString("ipAddress") + "::443::DoH::" + url;
-                    secLevel = (cipher == null ? "advanced" : "high");
+                    secLevel = (advancedConfig ? "advanced" : "high");
                     break;
                 default:
                     filterValue = filter.getString("ipAddress");
-                    secLevel = (cipher == null ? "advanced" : "low");
+                    secLevel = (advancedConfig ? "advanced" : "low");
                     break;
             }
             BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(CONFIG.readConfig())));
@@ -98,9 +111,6 @@ public class WebSocketConnector {
 
                 else if (ln.trim().startsWith("fallbackDNS"))
                     ln = "fallbackDNS = " + filterValue;
-
-                else if (ln.trim().startsWith("cipher") && cipher != null)
-                    ln = "cipher = " + cipher.getString("tlsVersion") + ":" + cipher.getString("name");
 
                 else if (ln.trim().startsWith("secLevel"))
                     ln = "secLevel = " + secLevel;
@@ -115,12 +125,37 @@ public class WebSocketConnector {
             out.flush();
             out.close();
 
+            boolean shouldVpnBeOnNow = getVpnStatus(secLevel);
+
+            if (shouldVpnBeOnNow && wasVpnOnBefore) {
+                Intent intent = new Intent(context, DNSFilterService.class);
+                context.stopService(intent);
+                intent = new Intent(context, OpenVPNService.class);
+                context.startService(intent);
+            } else {
+                Intent intent = new Intent(context, OpenVPNService.class);
+                context.stopService(intent);
+                intent = new Intent(context, DNSFilterService.class);
+                context.startService(intent);
+            }
+
+            if(shouldVpnBeOnNow)
+                loadVpnProfile(vpn);
+
             if (changed) {
                 CONFIG.updateConfig(out.toByteArray());
             }
-        } catch (Exception e) {
-            Log.e(TAG, "persistConfig: " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e){
+            e.printStackTrace();
         }
+    }
+
+    private void saveVpnServerName(String serverName){
+        SharedPreferences.Editor editor = context.getSharedPreferences("preferences", Context.MODE_PRIVATE).edit();
+        editor.putString("selVpnHost", serverName);
+        editor.apply();
     }
 
     private Disposable subscribeToSecurityConfig() {
@@ -129,15 +164,83 @@ public class WebSocketConnector {
             try {
                 JSONObject config = new JSONObject(result.getPayload());
                 JSONObject filter = config.getJSONObject("filter");
-                JSONObject cipher = config.getJSONObject("cipher");
+                JSONObject vpn = null;
+                if(config.has("vpn")) {
+                    vpn = config.getJSONObject("vpn");
+                    saveVpnServerName(vpn.getString("hostName"));
+                }
                 // Write filter to file
-                modifyConfig(filter, cipher);
+                modifyConfig(filter, vpn, false);
             } catch (JSONException e) {
                 Log.e(TAG, "subscribeToSecurityConfig: Error parsing JSON from server");
                 Log.e(TAG, "subscribeToSecurityConfig: " + e.getMessage());
             }
 
         });
+    }
+
+    private boolean loadVpnProfile(JSONObject vpnServer) {
+        VpnServer currentServer;
+        try {
+            currentServer = new VpnServer(
+                    vpnServer.getString("hostName"),
+                    vpnServer.getString("ip"),
+                    String.valueOf(vpnServer.getLong("score")),
+                    String.valueOf(vpnServer.getInt("ping")),
+                    String.valueOf(vpnServer.getLong("speed")),
+                    vpnServer.getString("country"),
+                    vpnServer.getString("countryCode"),
+                    String.valueOf(vpnServer.getInt("numVpnSessions")),
+                    String.valueOf(vpnServer.getLong("uptime")),
+                    String.valueOf(vpnServer.getLong("totalUsers")),
+                    String.valueOf(vpnServer.getLong("totalTraffic")),
+                    vpnServer.getString("logType"),
+                    vpnServer.getString("operator"),
+                    vpnServer.getString("message"),
+                    vpnServer.getString("configData"),
+                    ConnectionQuality.getConnectionQuality(
+                            String.valueOf(vpnServer.getLong("speed")),
+                            String.valueOf(vpnServer.getInt("numVpnSessions")),
+                            String.valueOf(vpnServer.getInt("ping"))
+                    ),
+                    null,
+                    0,
+                    null,
+                    0,
+                    0
+            );
+            HomeFragment.vpnHost = currentServer.getHostName();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+        byte[] data;
+        try {
+            data = Base64.decode(currentServer.getConfigData(), Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        ConfigParser cp = new ConfigParser();
+        InputStreamReader isr = new InputStreamReader(new ByteArrayInputStream(data));
+        try {
+            cp.parseConfig(isr);
+            VpnProfile vpnProfile = cp.convertProfile();
+            vpnProfile.mName = currentServer.getCountryLong();
+            vpnProfile.mOverrideDNS = true;
+            SharedPreferences prefs = context.getSharedPreferences(Config.PREF_KEY_RESOLVED_TARGET, Context.MODE_PRIVATE);
+            String dns = prefs.getString(Config.PREF_KEY_RESOLVED_DNS_PROXY, null);
+            vpnProfile.mDNS1 = dns;
+            vpnProfile.mDNS2 = dns;
+            ProfileManager.getInstance(context).addProfile(vpnProfile);
+            VPNLaunchHelper.startOpenVpn(vpnProfile, context);
+        } catch (IOException | ConfigParser.ConfigParseError e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public void connectWebSocket(String target) {
@@ -240,5 +343,8 @@ public class WebSocketConnector {
                 .subscribe(callback::onSubscriptionResult, throwable -> {
                     Log.e(TAG, "Error on subscribe topic", throwable);
                 });
+    }
+
+    public void modifyConfig(JSONObject jsonObject, JSONObject vpnServerInfo) {
     }
 }

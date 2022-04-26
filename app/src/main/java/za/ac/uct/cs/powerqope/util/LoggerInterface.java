@@ -23,13 +23,13 @@
 package za.ac.uct.cs.powerqope.util;
 
 public interface LoggerInterface {
-	public void logLine(String txt);
+	void logLine(String txt);
 
-	public void logException(Exception e);
+	void logException(Exception e);
 
-	public void log(String txt);
+	void log(String txt);
 
-	public void message(String txt);
+	void message(String txt);
 	
-	public void closeLogger();
+	void closeLogger();
 }

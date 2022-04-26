@@ -13,7 +13,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Encryption {
 
-    private static byte[] iv = new byte[]{12, -2, 30, 41, 101, -65, 17, -8, -91, 120, -11, 122, 13, -44, 45, 16};
+    private static final byte[] iv = new byte[]{12, -2, 30, 41, 101, -65, 17, -8, -91, 120, -11, 122, 13, -44, 45, 16};
     
     public static byte[] INIT_BYTES = new byte[]{45, 7, -8, 45, 6, -65, 89, 5};
     public static byte[] ENCR_INIT_BYTES;

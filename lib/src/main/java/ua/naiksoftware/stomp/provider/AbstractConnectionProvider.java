@@ -1,6 +1,6 @@
 package ua.naiksoftware.stomp.provider;
 
-import androidx.annotation.NonNull;;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.util.Log;
 

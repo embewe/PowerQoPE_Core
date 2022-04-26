@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 public class PaddingCipherInputStream extends InputStream {
 
-	private DataInputStream lowerIn;
+	private final DataInputStream lowerIn;
 	private ByteArrayInputStream byteBuf;
 	private boolean eof = false;
 	private boolean init = false;
@@ -61,7 +61,7 @@ public class PaddingCipherInputStream extends InputStream {
 
 
 	@Override
-	public int read(byte b[], int off, int len) throws IOException {
+	public int read(byte[] b, int off, int len) throws IOException {
 		if (!init)
 			initRead();
 		if (available() != 0)

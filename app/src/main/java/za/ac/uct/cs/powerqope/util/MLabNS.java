@@ -130,7 +130,7 @@ public class MLabNS {
 
     String charset = null;
     if (entity.getContentType() != null) {
-      HeaderElement values[] = entity.getContentType().getElements();
+      HeaderElement[] values = entity.getContentType().getElements();
       if (values.length > 0) {
         NameValuePair param = values[0].getParameterByName("charset");
         if (param != null) {

@@ -43,7 +43,7 @@ public class DNSResolver implements Runnable {
 	private static final String TAG = "DNSResolver";
 
 	private static int THR_COUNT = 0;
-	private static Object CNT_SYNC = new Object();
+	private static final Object CNT_SYNC = new Object();
 	private static boolean IO_ERROR=false;
 
 
@@ -133,7 +133,7 @@ public class DNSResolver implements Runnable {
 			int length = dnsQuery.produceResponse(response.getData(), response.getOffset(), ip, localResolverTTL);
 			response.setLength(length);
 
-			String addrStr = InetAddress.getByAddress(ip).getHostAddress().toString();
+			String addrStr = InetAddress.getByAddress(ip).getHostAddress();
 
 			DNSResponsePatcher.trafficLog(client,clss,type,host, addrStr, ip.length);
 

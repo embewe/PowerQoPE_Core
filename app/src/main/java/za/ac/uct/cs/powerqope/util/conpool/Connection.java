@@ -64,13 +64,13 @@ import za.ac.uct.cs.powerqope.util.TimoutNotificator;
      boolean valid = true;
      boolean ssl = false;
  
-     private static byte[] NO_IP = new byte[]{0,0,0,0};
-     private static HashMap connPooled = new HashMap();
-     private static HashSet connAquired = new HashSet();
+     private static final byte[] NO_IP = new byte[]{0,0,0,0};
+     private static final HashMap connPooled = new HashMap();
+     private static final HashSet connAquired = new HashSet();
      private static Hashtable CUSTOM_HOSTS = getCustomHosts();
      private static String CUSTOM_HOSTS_FILE_NAME = null;
      private static int  POOLTIMEOUT_SECONDS = 300;	
-     private static TimoutNotificator toNotify = TimoutNotificator.getNewInstance();
+     private static final TimoutNotificator toNotify = TimoutNotificator.getNewInstance();
  
      private Connection(String host, int port, int conTimeout, boolean ssl, SSLSocketFactory sslSocketFactory, Proxy proxy) throws IOException {		
          InetAddress adr=null;
@@ -304,7 +304,7 @@ import za.ac.uct.cs.powerqope.util.TimoutNotificator;
              int r = socketIn.read();
              if (r!=-1) {
                  int avail = socketIn.available();
-                 byte buf[] = new byte [Math.max(avail, 10240)];
+                 byte[] buf = new byte [Math.max(avail, 10240)];
                  socketIn.read(buf);
                  String data = ((char)r)+new String(buf);				
              }

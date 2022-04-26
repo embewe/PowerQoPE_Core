@@ -33,7 +33,7 @@ import za.ac.uct.cs.powerqope.R;
 public class GraphFragment extends Fragment {
     LineChart mChart;
     private Thread dataUpdate;
-    private Handler vHandler = new Handler();
+    private final Handler vHandler = new Handler();
     private ArrayList<Entry> e1;
     private ArrayList<Entry> e2;
     protected ArrayList<Float> mDownload, mUpload;
@@ -52,11 +52,11 @@ public class GraphFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_graph, container, false);
-        dSpeed = (TextView) rootView.findViewById(R.id.text_download);
-        uSpeed = (TextView) rootView.findViewById(R.id.text_upload);
+        dSpeed = rootView.findViewById(R.id.text_download);
+        uSpeed = rootView.findViewById(R.id.text_upload);
         dSpeed.setText(" ");
         uSpeed.setText(" ");
-        mChart = (LineChart) rootView.findViewById(R.id.lineChart);
+        mChart = rootView.findViewById(R.id.lineChart);
         setRetainInstance(true);
         mDownload = new ArrayList<>();
         mUpload = new ArrayList<>();
@@ -143,7 +143,7 @@ public class GraphFragment extends Fragment {
         ArrayList<ILineDataSet> sets = new ArrayList<>();
         sets.add(d2);
         sets.add(d1);
-        LimitLine ll1 = new LimitLine(max, toString().valueOf(df.format(max)) + mUnit);
+        LimitLine ll1 = new LimitLine(max, df.format(max) + mUnit);
         ll1.setLineWidth(1f);
         ll1.enableDashedLine(10f, 10f, 0f);
         ll1.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);
@@ -268,7 +268,7 @@ public class GraphFragment extends Fragment {
             d2.setDrawValues(false);
             d2.setDrawCircleHole(false);
 
-            LimitLine ll1 = new LimitLine(max, toString().valueOf(df.format(limitData)) + mUnit);
+            LimitLine ll1 = new LimitLine(max, df.format(limitData) + mUnit);
             ll1.setLineWidth(1f);
             ll1.enableDashedLine(10f, 10f, 0f);
             ll1.setLabelPosition(LimitLine.LimitLabelPosition.LEFT_TOP);

@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
  public class PooledConnectionOutputStream extends OutputStream {
-     private OutputStream out;
+     private final OutputStream out;
      private boolean valid = true;
      private long traffic = 0;
      

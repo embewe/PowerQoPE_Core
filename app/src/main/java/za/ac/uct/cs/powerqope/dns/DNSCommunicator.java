@@ -37,7 +37,7 @@ import za.ac.uct.cs.powerqope.util.Util;
 
 public class DNSCommunicator {
 	private static final String TAG = "DNSCommunicator";
-	private static DNSCommunicator INSTANCE = new DNSCommunicator();
+	private static final DNSCommunicator INSTANCE = new DNSCommunicator();
 	MutableLiveData<String> dnsServerListener = new MutableLiveData<>();
 
 	public DNSCommunicator() {
@@ -45,7 +45,7 @@ public class DNSCommunicator {
 		dnsServerListener.observeForever(s -> HomeFragment.setServerInfoTxt(s));
 	}
 
-	private static int TIMEOUT = 12000;
+	private static final int TIMEOUT = 12000;
 	DNSServer[] dnsServers = new DNSServer[0];
 	DNSServer[] currentCheckingDNServers;
 	int curDNS = -1;
@@ -112,7 +112,7 @@ public class DNSCommunicator {
 			boolean fastestFound = false;
 			boolean allReady = false;
 			boolean go = false;
-			Object monitor = new Object();
+			final Object monitor = new Object();
 			int cnt = 0;
 
 
@@ -136,8 +136,8 @@ public class DNSCommunicator {
 				for (int i = 0; i < dnsServersCopy.length; i++) {
 					final int finalI = i;
 					new Thread(new Runnable() {
-						DNSServer dnsServer = dnsServersCopy[finalI];
-						int dnsIdx = finalI;
+						final DNSServer dnsServer = dnsServersCopy[finalI];
+						final int dnsIdx = finalI;
 
 						public void writeDNSPerfInfo(String txt) {
 							try {

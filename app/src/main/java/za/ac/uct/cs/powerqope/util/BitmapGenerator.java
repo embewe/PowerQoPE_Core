@@ -6,7 +6,7 @@ import android.graphics.Paint;
 
 public class BitmapGenerator {
 
-    private  static Paint paint = new Paint();
+    private  static final Paint paint = new Paint();
 
     public static Bitmap getTextAsBitmap(String text, float textSize, int textColor) {
         String textUp = text.toUpperCase();

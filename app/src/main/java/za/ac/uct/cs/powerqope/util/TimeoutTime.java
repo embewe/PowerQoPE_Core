@@ -25,7 +25,7 @@ package za.ac.uct.cs.powerqope.util;
 public class TimeoutTime {
 	
 	private long timeout = Long.MAX_VALUE;
-	private TimoutNotificator toHandler;
+	private final TimoutNotificator toHandler;
 	
 	public TimeoutTime(TimoutNotificator toHandler){
 		this.toHandler=toHandler;

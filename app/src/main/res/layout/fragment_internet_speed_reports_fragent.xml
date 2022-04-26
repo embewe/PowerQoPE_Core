@@ -39,7 +39,7 @@
             android:layout_weight="0.2"
             android:gravity="center"
             android:padding="7dp"
-            android:text="Down"
+            android:text="Up"
             android:textStyle="bold"
             android:textColor="@color/textColorSecondary"
             android:textSize="18sp" />
@@ -52,7 +52,7 @@
             android:layout_weight="0.2"
             android:gravity="center"
             android:padding="7dp"
-            android:text="Up"
+            android:text="Down"
             android:textStyle="bold"
             android:textColor="@color/textColorSecondary"
             android:textSize="18sp" />

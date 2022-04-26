@@ -28,7 +28,7 @@ public class SpeedTestResult extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speed_test_result);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        listViewEmployees = (ListView) findViewById(R.id.listViewEmployees);
+        listViewEmployees = findViewById(R.id.listViewEmployees);
         employeeList = new ArrayList<>();
         //opening the database
         mDatabase = openOrCreateDatabase(SpeedTestActivity.DATABASE_NAME, MODE_PRIVATE, null);
