@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,14 +22,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,24 +38,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import za.ac.uct.cs.powerqope.activity.PrefManager;
 
-public class AdvancedActivity extends AppCompatActivity {
+
+public class AdvancedActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "AdvancedActivity";
-
-    LinearLayout back, container, container1, container2;
+    private ShowcaseView showcaseView;
+    private int counter = 0;
+    private ShowcaseView mGuideView;
+    private ShowcaseView.Builder builder;
+    private PrefManager prefManager;
+    LinearLayout back, container, container1, container2, dns, web, cypher, vpn, help;
     Switch switchEnableVpn, switchAutoConnect;
     RadioButton radioButton4, radioButton5, radioButton6;
     EditText editText, editText2, editText3;
     Spinner dropdown, dropdown1, dropdown2, dropdown3, dropdown4, vpnHosts;
     String[] advancedOptions;
-
     Map<String, List<String>> filterOptionsMap = new HashMap<>();
 
     List<String> filterOptions;
     Button configure;
     Context mContext;
     String MY_PREFS_NAME = "preferences";
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
+    }
 
     enum DNS_TYPES {Do53, DoT, DoH}
 
@@ -124,13 +136,17 @@ public class AdvancedActivity extends AppCompatActivity {
 
         advancedOptions = getResources().getStringArray(R.array.dns_providers);
         populateFilterOptionsMap();
-
+        help = findViewById(R.id.help);
         switchEnableVpn = findViewById(R.id.switchEnableVpn);
         editText = findViewById(R.id.editText);
         editText2 = findViewById(R.id.editText2);
         editText3 = findViewById(R.id.editText3);
         configure = findViewById(R.id.configure);
         back = findViewById(R.id.back);
+        dns = findViewById(R.id.dnsSettings);
+        web = findViewById(R.id.webFiltering);
+        vpn = findViewById(R.id.vpnSettings);
+        cypher = findViewById(R.id.cipherSuite);
         container = findViewById(R.id.container);
         container1 = findViewById(R.id.container1);
         container2 = findViewById(R.id.container2);
@@ -150,6 +166,16 @@ public class AdvancedActivity extends AppCompatActivity {
         radioButton5.setChecked(prefs.getBoolean("radio1", false));
         radioButton6.setChecked(prefs.getBoolean("radio2", false));
         switchAutoConnect.setChecked(prefs.getBoolean("switchAutoConnect", false));
+        prefManager=new PrefManager(getApplicationContext());
+       help.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+            showCaseView();
+           }
+       });
+
+
+
 
         if (radioButton4.isChecked() == true) {
             container.setVisibility(View.VISIBLE);
@@ -594,5 +620,49 @@ public class AdvancedActivity extends AppCompatActivity {
 
         }
     }
+    void showCaseView (){
+        showcaseView = new ShowcaseView.Builder(this)
+                .setTarget(new ViewTarget(dns))
+                .setContentTitle("Dns Settings")
+                       .setContentText("Details")
+                       .setOnClickListener(this)
+                       .setStyle(R.style.CustomShowCaseTheme)
+                       .build();
+               showcaseView.setButtonText("next");
+    }
+    public void onClick(View v) {
+        switch (counter) {
+            case 0:
+                showcaseView.setShowcase(new ViewTarget(web), true);
+                showcaseView.setContentTitle("Web Filtering Settings");
+                showcaseView.setContentText("Details");
+                break;
 
+            case 1:
+                showcaseView.setShowcase(new ViewTarget(cypher), true);
+                showcaseView.setContentTitle("Cipher Suite level");
+                showcaseView.setContentText("Details");
+                break;
+
+            case 2:
+                showcaseView.setShowcase(new ViewTarget(vpn), true);
+                showcaseView.setContentTitle("VPN Settings");
+                showcaseView.setContentText("Details");
+                showcaseView.setButtonText("close");
+                break;
+
+            case 3:
+                showcaseView.hide();
+                setAlpha(1.0f, dns, web, cypher, vpn);
+                break;
+        }
+        counter++;
+    }
+    private void setAlpha(float alpha, View... views) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            for (View view : views) {
+                view.setAlpha(alpha);
+            }
+        }
+    }
 }

@@ -48,9 +48,41 @@
                         android:textStyle="bold"
                         tools:layout_editor_absoluteX="123dp"
                         tools:layout_editor_absoluteY="518dp" />
+
                 </LinearLayout>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+<LinearLayout
+    android:id="@+id/help"
+    android:layout_alignParentRight="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="20dp">
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Help"
+    android:textStyle="bold"
+    android:textSize="16dp"
+        android:layout_marginRight="10dp"
+    android:textColor="@color/textColorSecondary"/>
+    <ImageView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:src="@drawable/ic_baseline_help_outline_24" />
+
+</LinearLayout>
+
+</RelativeLayout>
+
 
             </androidx.appcompat.widget.Toolbar>
+
 
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -61,12 +93,16 @@
             android:orientation="vertical">
 
             <LinearLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="60dp"
                 tools:ignore="MissingConstraints">
-
+            <LinearLayout
+                android:id="@+id/dnsSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -75,6 +111,8 @@
                     android:text="DNS Settings"
                     android:textColor="@color/colorAccent"
                     android:textSize="18dp" />
+            </LinearLayout>
+
 
                 <RadioGroup
                     android:layout_width="match_parent"
@@ -235,8 +273,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 tools:ignore="MissingConstraints">
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/webFiltering"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -244,6 +285,8 @@
                     android:text="Web Filtering Settings"
                     android:textColor="@color/colorAccent"
                     android:textSize="15dp" />
+                </LinearLayout>
+
 
                 <za.ac.uct.cs.powerqope.util.NDSpinner
                     android:id="@+id/spinner4"
@@ -268,15 +311,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 tools:ignore="MissingConstraints">
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/cipherSuite"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
-                    android:text="Cipher Suite level"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="15dp" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:text="Cipher Suite level"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
 
                 <za.ac.uct.cs.powerqope.util.NDSpinner
                     android:id="@+id/spinner5"
@@ -306,7 +356,10 @@
             android:orientation="vertical"
             android:paddingLeft="60dp"
             tools:ignore="MissingConstraints">
-
+            <LinearLayout
+                android:id="@+id/vpnSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -315,6 +368,8 @@
                 android:text="VPN Settings"
                 android:textColor="@color/colorAccent"
                 android:textSize="18dp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -330,6 +385,7 @@
                     android:text="Enable VPN"
                     android:textColor="#ffffff"
                     android:textSize="15dp" />
+
 
 
                 <Switch
