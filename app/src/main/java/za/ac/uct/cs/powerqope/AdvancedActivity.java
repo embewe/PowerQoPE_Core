@@ -623,8 +623,8 @@ public class AdvancedActivity extends AppCompatActivity implements View.OnClickL
     void showCaseView (){
         showcaseView = new ShowcaseView.Builder(this)
                 .setTarget(new ViewTarget(dns))
-                .setContentTitle("Dns Settings")
-                       .setContentText("Details")
+                .setContentTitle("DNS Settings")
+                       .setContentText("This option lets you control the privacy of your browsing transactions, e.g. hide your browsing history and your device information. DoH is more private than DoT and Regular DNS.")
                        .setOnClickListener(this)
                        .setStyle(R.style.CustomShowCaseTheme)
                        .build();
@@ -635,19 +635,19 @@ public class AdvancedActivity extends AppCompatActivity implements View.OnClickL
             case 0:
                 showcaseView.setShowcase(new ViewTarget(web), true);
                 showcaseView.setContentTitle("Web Filtering Settings");
-                showcaseView.setContentText("Details");
+                showcaseView.setContentText("This option lets you block adverts (Ads filter), pornographic sites (Adult, Family), malware (Security), gambling (Family) etc. This is very important especially for children");
                 break;
 
             case 1:
                 showcaseView.setShowcase(new ViewTarget(cypher), true);
                 showcaseView.setContentTitle("Cipher Suite level");
-                showcaseView.setContentText("Details");
+                showcaseView.setContentText("This option lets you specify the strength level of encryption algorithms. If you are not sure about this you may let the system decide the recommended setting.");
                 break;
 
             case 2:
                 showcaseView.setShowcase(new ViewTarget(vpn), true);
                 showcaseView.setContentTitle("VPN Settings");
-                showcaseView.setContentText("Details");
+                showcaseView.setContentText("This is a more private security option. It lets you bypass your Internet Service Provider and connect to a remote server. You remain anonymous and lets you access geo-restricted content. The server list in this setting are for academic purposes only. They are verified to be safe.");
                 showcaseView.setButtonText("close");
                 break;
 
