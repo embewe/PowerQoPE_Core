@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: org.testcontainers:testcontainers:1.17.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testcontainers/testcontainers/1.17.1/a06a5310ce69167586b519e396710750e2c02941/testcontainers-1.17.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testcontainers/testcontainers/1.17.1/a39f4a8ff09ccc49261f14617929720dc35def8/testcontainers-1.17.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.testcontainers/testcontainers/1.17.1/d1c94d6df0ab78e337ae166c1e26ec1abcb6192c/testcontainers-1.17.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

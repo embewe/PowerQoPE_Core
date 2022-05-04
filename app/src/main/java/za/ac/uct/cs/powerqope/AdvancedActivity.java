@@ -647,7 +647,7 @@ public class AdvancedActivity extends AppCompatActivity implements View.OnClickL
             case 2:
                 showcaseView.setShowcase(new ViewTarget(vpn), true);
                 showcaseView.setContentTitle("VPN Settings");
-                showcaseView.setContentText("This is a more private security option. It lets you bypass your Internet Service Provider and connect to a remote server. You remain anonymous and lets you access geo-restricted content. The server list in this setting are for academic purposes only. They are verified to be safe.");
+                showcaseView.setContentText("This is a more private security option. It lets you bypass pervasive monitoring and connects you to a remote private network. You remain anonymous and lets you access geo-restricted content. The server list in this setting are for academic purposes only. They are verified to be safe.");
                 showcaseView.setButtonText("close");
                 break;
 
