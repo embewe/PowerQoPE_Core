@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,15 +21,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.ViewTarget;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,34 +36,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import za.ac.uct.cs.powerqope.activity.PrefManager;
 
-
-public class AdvancedActivity extends AppCompatActivity implements View.OnClickListener {
+public class AdvancedActivity extends AppCompatActivity {
 
     private static final String TAG = "AdvancedActivity";
-    private ShowcaseView showcaseView;
-    private int counter = 0;
-    private ShowcaseView mGuideView;
-    private ShowcaseView.Builder builder;
-    private PrefManager prefManager;
-    LinearLayout back, container, container1, container2, dns, web, cypher, vpn, help;
+
+    LinearLayout back, container, container1, container2;
     Switch switchEnableVpn, switchAutoConnect;
     RadioButton radioButton4, radioButton5, radioButton6;
     EditText editText, editText2, editText3;
     Spinner dropdown, dropdown1, dropdown2, dropdown3, dropdown4, vpnHosts;
     String[] advancedOptions;
+
     Map<String, List<String>> filterOptionsMap = new HashMap<>();
 
     List<String> filterOptions;
     Button configure;
     Context mContext;
     String MY_PREFS_NAME = "preferences";
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-        super.onPointerCaptureChanged(hasCapture);
-    }
 
     enum DNS_TYPES {Do53, DoT, DoH}
 
@@ -136,17 +124,13 @@ public class AdvancedActivity extends AppCompatActivity implements View.OnClickL
 
         advancedOptions = getResources().getStringArray(R.array.dns_providers);
         populateFilterOptionsMap();
-        help = findViewById(R.id.help);
+
         switchEnableVpn = findViewById(R.id.switchEnableVpn);
         editText = findViewById(R.id.editText);
         editText2 = findViewById(R.id.editText2);
         editText3 = findViewById(R.id.editText3);
         configure = findViewById(R.id.configure);
         back = findViewById(R.id.back);
-        dns = findViewById(R.id.dnsSettings);
-        web = findViewById(R.id.webFiltering);
-        vpn = findViewById(R.id.vpnSettings);
-        cypher = findViewById(R.id.cipherSuite);
         container = findViewById(R.id.container);
         container1 = findViewById(R.id.container1);
         container2 = findViewById(R.id.container2);
@@ -166,16 +150,6 @@ public class AdvancedActivity extends AppCompatActivity implements View.OnClickL
         radioButton5.setChecked(prefs.getBoolean("radio1", false));
         radioButton6.setChecked(prefs.getBoolean("radio2", false));
         switchAutoConnect.setChecked(prefs.getBoolean("switchAutoConnect", false));
-        prefManager=new PrefManager(getApplicationContext());
-       help.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-            showCaseView();
-           }
-       });
-
-
-
 
         if (radioButton4.isChecked() == true) {
             container.setVisibility(View.VISIBLE);
@@ -210,6 +184,21 @@ public class AdvancedActivity extends AppCompatActivity implements View.OnClickL
                 selDNSFilter = adapterView.getItemAtPosition(i).toString();
                 SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
                 editor.putString("selDNSFilter", selDNSFilter);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        dropdown4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selCipherLevel = adapterView.getItemAtPosition(i).toString();
+                SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+                editor.putString("selCipherLevel", selCipherLevel);
                 editor.apply();
             }
 
@@ -578,7 +567,7 @@ public class AdvancedActivity extends AppCompatActivity implements View.OnClickL
 
     private class DNSItemChangeListener implements AdapterView.OnItemSelectedListener {
 
-        private final EditText et;
+        private EditText et;
 
         public DNSItemChangeListener(EditText et){
             this.et = et;
@@ -620,49 +609,21 @@ public class AdvancedActivity extends AppCompatActivity implements View.OnClickL
 
         }
     }
-    void showCaseView (){
-        showcaseView = new ShowcaseView.Builder(this)
-                .setTarget(new ViewTarget(dns))
-                .setContentTitle("DNS Settings")
-                       .setContentText("This option lets you control the privacy of your browsing transactions, e.g. hide your browsing history and your device information. DoH is more private than DoT and Regular DNS.")
-                       .setOnClickListener(this)
-                       .setStyle(R.style.CustomShowCaseTheme)
-                       .build();
-               showcaseView.setButtonText("next");
-    }
-    public void onClick(View v) {
-        switch (counter) {
-            case 0:
-                showcaseView.setShowcase(new ViewTarget(web), true);
-                showcaseView.setContentTitle("Web Filtering Settings");
-                showcaseView.setContentText("This option lets you block adverts (Ads filter), pornographic sites (Adult, Family), malware (Security), gambling (Family) etc. This is very important especially for children");
-                break;
 
-            case 1:
-                showcaseView.setShowcase(new ViewTarget(cypher), true);
-                showcaseView.setContentTitle("Cipher Suite level");
-                showcaseView.setContentText("This option lets you specify the strength level of encryption algorithms. If you are not sure about this you may let the system decide the recommended setting.");
-                break;
+    private class VpnServerChangeListener implements AdapterView.OnItemSelectedListener {
 
-            case 2:
-                showcaseView.setShowcase(new ViewTarget(vpn), true);
-                showcaseView.setContentTitle("VPN Settings");
-                showcaseView.setContentText("This is a more private security option. It lets you bypass pervasive monitoring and connects you to a remote private network. You remain anonymous and lets you access geo-restricted content. The server list in this setting are for academic purposes only. They are verified to be safe.");
-                showcaseView.setButtonText("close");
-                break;
-
-            case 3:
-                showcaseView.hide();
-                setAlpha(1.0f, dns, web, cypher, vpn);
-                break;
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            selVpnHost = vpnServerList.get(i);
+            SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+            editor.putString("selVpnHost", selVpnHost);
+            editor.apply();
         }
-        counter++;
-    }
-    private void setAlpha(float alpha, View... views) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            for (View view : views) {
-                view.setAlpha(alpha);
-            }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
         }
     }
+
 }

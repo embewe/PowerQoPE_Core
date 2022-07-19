@@ -1,6 +1,8 @@
 package za.ac.uct.cs.powerqope.fragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
@@ -23,7 +25,10 @@ import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -33,6 +38,11 @@ import java.util.HashSet;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
+
+import za.ac.uct.cs.powerqope.Config;
+import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
+import za.ac.uct.cs.powerqope.util.PhoneUtils;
+import za.ac.uct.cs.powerqope.util.WebSocketConnector;
 import za.ac.uct.cs.powerqope.utils.GetSpeedTestHostsHandler;
 import za.ac.uct.cs.powerqope.utils.HttpDownloadTest;
 import za.ac.uct.cs.powerqope.utils.HttpUploadTest;
@@ -51,6 +61,9 @@ public class SpeedCheckerFragment extends Fragment {
     HashSet<String> tempBlackList;
     private SQLiteDatabase mDatabase;
     public static final String DATABASE_NAME = "myspeed";
+    private static ConfigurationAccess CONFIG = ConfigurationAccess.getLocal();
+    String vpnServer;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -63,7 +76,7 @@ public class SpeedCheckerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_speed_checker, container, false);
-        final Button startButton =  v.findViewById(R.id.startButton);
+        final Button startButton = v.findViewById(R.id.startButton);
         final DecimalFormat dec = new DecimalFormat("#.##");
         startButton.setText("Begin Test");
         mDatabase = getActivity().openOrCreateDatabase(DATABASE_NAME, MODE_PRIVATE, null);
@@ -76,6 +89,8 @@ public class SpeedCheckerFragment extends Fragment {
                         ");"
         );
         tempBlackList = new HashSet<>();
+        SharedPreferences prefs = getActivity().getSharedPreferences("preferences", Context.MODE_PRIVATE);
+        vpnServer = prefs.getString("selVpnHost", null);
 
         getSpeedTestHostsHandler = new GetSpeedTestHostsHandler();
         getSpeedTestHostsHandler.start();
@@ -90,10 +105,10 @@ public class SpeedCheckerFragment extends Fragment {
 
                 new Thread(new Runnable() {
                     RotateAnimation rotate;
-                    final ImageView barImageView = getView().findViewById(R.id.barImageView);
-                    final TextView pingTextView =   getView().findViewById(R.id.pingTextView);
-                    final TextView downloadTextView =  getView().findViewById(R.id.downloadTextView);
-                    final TextView uploadTextView =  getView().findViewById(R.id.uploadTextView);
+                    ImageView barImageView = getView().findViewById(R.id.barImageView);
+                    TextView pingTextView = getView().findViewById(R.id.pingTextView);
+                    TextView downloadTextView = getView().findViewById(R.id.downloadTextView);
+                    TextView uploadTextView = getView().findViewById(R.id.uploadTextView);
 
                     @Override
                     public void run() {
@@ -176,7 +191,7 @@ public class SpeedCheckerFragment extends Fragment {
                         });
 
                         //Init Ping graphic
-                        final LinearLayout chartPing =   getView().findViewById(R.id.chartPing);
+                        final LinearLayout chartPing = getView().findViewById(R.id.chartPing);
                         XYSeriesRenderer pingRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine pingFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
                         pingFill.setColor(Color.parseColor("#4d5a6a"));
@@ -197,7 +212,7 @@ public class SpeedCheckerFragment extends Fragment {
                         multiPingRenderer.addSeriesRenderer(pingRenderer);
 
                         //Init Download graphic
-                        final LinearLayout chartDownload = getView().findViewById(R.id.chartDownload);
+                        final LinearLayout chartDownload = (LinearLayout) getView().findViewById(R.id.chartDownload);
                         XYSeriesRenderer downloadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine downloadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
                         downloadFill.setColor(Color.parseColor("#4d5a6a"));
@@ -218,7 +233,7 @@ public class SpeedCheckerFragment extends Fragment {
                         multiDownloadRenderer.addSeriesRenderer(downloadRenderer);
 
                         //Init Upload graphic
-                        final LinearLayout chartUpload = getView().findViewById(R.id.chartUpload);
+                        final LinearLayout chartUpload = (LinearLayout) getView().findViewById(R.id.chartUpload);
                         XYSeriesRenderer uploadRenderer = new XYSeriesRenderer();
                         XYSeriesRenderer.FillOutsideLine uploadFill = new XYSeriesRenderer.FillOutsideLine(XYSeriesRenderer.FillOutsideLine.Type.BOUNDS_ALL);
                         uploadFill.setColor(Color.parseColor("#4d5a6a"));
@@ -500,6 +515,30 @@ public class SpeedCheckerFragment extends Fragment {
                                 //first is the sql string and second is the parameters that is to be binded with the query
                                 String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
                                 mDatabase.execSQL(insertSQL, new String[]{downloadTextView.getText().toString(), uploadTextView.getText().toString(), currentDateTimeString});
+                                JSONObject resultObj = new JSONObject();
+                                PhoneUtils.setGlobalContext(getActivity().getApplicationContext());
+                                try {
+                                    JSONObject values = new JSONObject();
+                                    values.put("secLevel", CONFIG.getConfig().getProperty("secLevel"));
+                                    values.put("filter", CONFIG.getConfig().getProperty("fallbackDNS"));
+                                    values.put("filterProvider", CONFIG.getConfig().getProperty("filterProvider"));
+                                    values.put("vpnServer", (vpnServer == null ? "VPN_OFF" : vpnServer));
+                                    values.put("ping", ""+pingTest.getInstantRtt());
+                                    values.put("upload", "" + uploadTest.getFinalUploadRate());
+                                    values.put("download", "" + downloadTest.getFinalDownloadRate());
+                                    resultObj.put("success", true);
+                                    resultObj.put("taskKey", "USER_INITIATED");
+                                    resultObj.put("accountName", "Anonymous");
+                                    resultObj.put("deviceId", PhoneUtils.getPhoneUtils().getDeviceInfo().deviceId);
+                                    resultObj.put("timestamp", System.currentTimeMillis());
+                                    resultObj.put("type", "speed");
+                                    resultObj.put("values", values);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                WebSocketConnector.getInstance().sendMessage(Config.STOMP_SERVER_JOB_RESULT_ENDPOINT, resultObj.toString());
                                 startButton.setEnabled(true);
                                 startButton.setTextSize(16);
                                 startButton.setText("Restart Test");
@@ -513,6 +552,7 @@ public class SpeedCheckerFragment extends Fragment {
         });
         return v;
     }
+
     public int getPositionByRate(double rate) {
         if (rate <= 1) {
             return (int) (rate * 30);

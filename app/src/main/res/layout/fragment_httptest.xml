@@ -72,7 +72,18 @@
             android:orientation="vertical"
             >
 
-
+            <TextView
+                android:id="@+id/txtHttpResult"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#292B2B"
+                android:backgroundTint="#292B2B"
+                android:textSize="18sp"
+                android:textColor="@color/textColorSecondary"
+                android:visibility="gone"
+                android:layout_marginBottom="50dp"
+                android:padding="20dp"
+                />
             <LinearLayout
                 android:id="@+id/button_start"
                 android:layout_width="match_parent"

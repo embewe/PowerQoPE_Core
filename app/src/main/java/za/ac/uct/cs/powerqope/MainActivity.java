@@ -47,7 +47,6 @@ import java.util.Properties;
 import de.blinkt.openvpn.VpnProfile;
 import de.blinkt.openvpn.core.OpenVPNService;
 import de.blinkt.openvpn.core.VPNLaunchHelper;
-import za.ac.uct.cs.powerqope.activity.PrefManager;
 import za.ac.uct.cs.powerqope.dns.ConfigurationAccess;
 import za.ac.uct.cs.powerqope.dns.DNSFilterService;
 import za.ac.uct.cs.powerqope.fragment.HTTPTestFragment;
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
     private String target;
     private boolean remoteVpnEnabled = false;
     private boolean isBoundRemoteVpnService = false;
-    private PrefManager prefManager;
+
     protected static Properties config = null;
     protected static boolean switchingConfig = false;
     private static VpnProfile remoteVpnProfile;
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 }
             });
 
-    private final ServiceConnection vpnConnection = new ServiceConnection() {
+    private ServiceConnection vpnConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             OpenVPNService.LocalBinder binder = (OpenVPNService.LocalBinder) service;
@@ -280,14 +279,6 @@ public class MainActivity extends AppCompatActivity implements DrawerAdapter.OnI
             slidingRootNav.closeMenu();
             Fragment selectedScreen = new SpeedCheckerFragment();
             showFragment(selectedScreen);
-        }
-        if (position == POS_HELP){
-            prefManager=new PrefManager(getApplicationContext());
-            prefManager.setFirstTimeLaunch(true);
-            slidingRootNav.closeMenu();
-            Fragment selectedScreen = new HomeFragment();
-            showFragment(selectedScreen);
-
         }
 
         if (position !=POS_SPEED_CHECKER ){

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.yarolegovich:sliding-root-nav:1.1.1@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/03444939b7c0e97ce969bdb0d6beb200/transformed/jetified-sliding-root-nav-1.1.1/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/03444939b7c0e97ce969bdb0d6beb200/transformed/jetified-sliding-root-nav-1.1.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/03444939b7c0e97ce969bdb0d6beb200/transformed/jetified-sliding-root-nav-1.1.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7d2331944b79d4b6fc120f1bae8c38cc/transformed/jetified-sliding-root-nav-1.1.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7d2331944b79d4b6fc120f1bae8c38cc/transformed/jetified-sliding-root-nav-1.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7d2331944b79d4b6fc120f1bae8c38cc/transformed/jetified-sliding-root-nav-1.1.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
