@@ -2,10 +2,19 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PowerQoPE_Core.iml" filepath="$PROJECT_DIR$/.idea/modules/PowerQoPE_Core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE_Core.GaugeView.iml" filepath="$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE_Core.GaugeView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PowerQoPE_Core.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PowerQoPE_Core.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/PowerQoPE_Core.lib.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/PowerQoPE_Core.lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PowerQoPE.iml" filepath="$PROJECT_DIR$/.idea/modules/PowerQoPE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.iml" filepath="$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.main.iml" filepath="$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/library/GaugeView/PowerQoPE.GaugeView.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PowerQoPE.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.main.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/lib/PowerQoPE.lib.unitTest.iml" />
     </modules>
   </component>
 </project>

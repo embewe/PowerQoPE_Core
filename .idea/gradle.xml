@@ -16,7 +16,6 @@
             <option value="$PROJECT_DIR$/library/GaugeView" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

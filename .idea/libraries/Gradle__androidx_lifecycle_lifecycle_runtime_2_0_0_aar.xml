@@ -2,8 +2,8 @@
   <library name="Gradle: androidx.lifecycle:lifecycle-runtime:2.0.0@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4c7e5b6d46acfb24c04b3a473c53b419/lifecycle-runtime-2.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/76ea9c5ded5184e7d4ffd9f2a0583899/transformed/lifecycle-runtime-2.0.0/AndroidManifest.xml" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/76ea9c5ded5184e7d4ffd9f2a0583899/transformed/lifecycle-runtime-2.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/76ea9c5ded5184e7d4ffd9f2a0583899/transformed/lifecycle-runtime-2.0.0/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/76ea9c5ded5184e7d4ffd9f2a0583899/transformed/lifecycle-runtime-2.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
